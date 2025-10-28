@@ -1,9 +1,17 @@
+<p align="center">
+  <img src="/Documentation/images/logo.png" alt="QUT Logo" width="300"/>
+</p>
+
+> The Queensland University of Technology (QUT) acknowledges the Turrbal and Yugara, as the First Nations owners of the lands where QUT now stands. We pay respect to their Elders, lores, customs and creation spirits. We recognise that these lands have always been places of teaching, research and learning.
+>
+> QUT acknowledges the important role Aboriginal and Torres Strait Islander people play within the QUT community. [cite: 452]
+
 # SubbyROV: A Small-Scale Underwater ROV
 
-| [Image: Final SolidWorks Render (Design #4)] | [Image Placeholder: Size comparison with the standard BlueROV2] |
+| ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) | ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
 | :---: | :---: |
-| *Final SolidWorks Render (Design #4)* | *Size comparison with the standard BlueROV2* |
-| [Image Placeholder: Initial prototyping workspace and components] | [Image Placeholder: Test-fitting the internal electronics tray] |
+| *Final SolidWorks Render (Design #4)* | *Final SolidWorks Render (Design WTE #4)* |
+| ![Initial prototyping workspace and components](/Documentation/images/workshop) | ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) |
 | *Initial prototyping workspace and components* | *Test-fitting the internal electronics tray* |
 
 ## About the SubbyROV Project
@@ -14,7 +22,7 @@ This repository will serve as the open-source hub for the project, containing al
 
 ### Motivation
 
-While QUT possesses a capable BlueROV2, its large size, complex handling, and setup requirements (e.g., pool approval) make it impractical for rapid prototyping, small-scale tests, or educational demonstrations.
+While QUT possesses a capable BlueROV2, its large size, complex handling, and setup requirements (e.g., pool approval) make it impractical for rapid prototyping, small-scale tests, or educational demonstrations .
 
 This project aims to fill that gap by creating a highly modular, cost-effective, and compact ROV. The primary objective is to build a fully operational vehicle that can serve as:
 
@@ -27,7 +35,7 @@ The SubbyROV is designed from the ground up to be small, agile, and computationa
 
 | Specification | Details |
 | :--- | :--- |
-| **Project Name** | SubbyROV |
+| **Project Name** | SubbyROV  |
 | **Structure** | Blue Robotics 3" watertight enclosure on a custom aluminum Item profile frame. |
 | **Propulsion** | 4 x APISQUEEN U2 MINI thrusters with external waterproof ESCs. |
 | **Configuration** | Experimental 45-45 degree vectored thruster layout. |
@@ -46,7 +54,7 @@ The SubbyROV is designed from the ground up to be small, agile, and computationa
 ### Key Milestones Achieved
 
 * **Literature Review:** A comprehensive review of existing ROV designs was completed to inform key design philosophies.
-* **Design Iterations:** The project progressed through four major design iterations in SolidWorks, pivoting from an initial 6-thruster concept to the final, compact 4-thruster design to meet strict size and power constraints.
+* **Design Iterations:** The project progressed through four major design iterations in SolidWorks, pivoting from an initial 6-thruster concept to the final, compact 4-thruster design to meet strict size and power constraints .
 * **Final CAD Model:** A complete, detailed CAD assembly of the final design has been produced.
 * **Procurement:** A full Bill of Materials (BOM) has been finalized. All critical long-lead components (Pixhawk 6X, thrusters, enclosure) have been procured and received.
 * **Initial Prototyping:** The internal electronics tray has been 3D-printed and assembled with the core components to test-fit and validate the SolidWorks design.
@@ -80,8 +88,8 @@ This repository will be populated as the project progresses and will contain:
 
 ## The Team
 
-[Image Placeholder: Photo of Joshua Hecke]
-* **Student Engineer:** Joshua Hecke (Queensland University of Technology)
+![Photo of Joshua Hecke](/Documentation/images/profileB.jpg)
+* **Student Engineer:** Joshua Hecke (Queensland University of Technology) 
 
-[Image Placeholder: Photo of Tobias Fischer]
-* **Project Supervisor:** Tobias Fischer (Queensland University of Technology)
+![Photo of Tobias Fischer](/Documentation/images/profileA.jpg)
+* **Project Supervisor:** Tobias Fischer (Queensland University of Technology) 
