@@ -3,9 +3,9 @@
 </p>
 
 # SubbyROV: A Small-Scale Underwater ROV
-
+| :--- |
 | ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) |
-| *Final SolidWorks Render (Design #4)* 
+| *Final SolidWorks Render (Design #4)* |
 | ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
 | *Final SolidWorks Render (Design WTE #4)* |
 | ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) |
@@ -85,8 +85,8 @@ This repository will be populated as the project progresses and will contain:
 
 ## The Team
 
-<img src="/Documentation/images/profileB.jpg" alt="Photo of Joshua Hecke" width="50"/>
-* **Student Engineer:** Joshua Hecke (Queensland University of Technology) 
+<img src="/Documentation/images/profileB.jpg" alt="Photo of Joshua Hecke" width="100"/>
+Student Engineer: Joshua Hecke (Queensland University of Technology) 
 
-<img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="50"/>
-* **Project Supervisor:** Tobias Fischer (Queensland University of Technology) 
+<img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="100"/>
+Project Supervisor: Tobias Fischer (Queensland University of Technology) 
