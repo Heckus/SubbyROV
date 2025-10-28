@@ -2,17 +2,14 @@
   <img src="/Documentation/images/logo.png" alt="QUT Logo" width="300"/>
 </p>
 
-> The Queensland University of Technology (QUT) acknowledges the Turrbal and Yugara, as the First Nations owners of the lands where QUT now stands. We pay respect to their Elders, lores, customs and creation spirits. We recognise that these lands have always been places of teaching, research and learning.
->
-> QUT acknowledges the important role Aboriginal and Torres Strait Islander people play within the QUT community. [cite: 452]
-
 # SubbyROV: A Small-Scale Underwater ROV
 
-| ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) | ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
-| :---: | :---: |
-| *Final SolidWorks Render (Design #4)* | *Final SolidWorks Render (Design WTE #4)* |
-| ![Initial prototyping workspace and components](/Documentation/images/workshop) | ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) |
-| *Initial prototyping workspace and components* | *Test-fitting the internal electronics tray* |
+| ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) |
+| *Final SolidWorks Render (Design #4)* 
+| ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
+| *Final SolidWorks Render (Design WTE #4)* |
+| ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) |
+| *Test-fitting the internal electronics tray* |
 
 ## About the SubbyROV Project
 
@@ -88,8 +85,8 @@ This repository will be populated as the project progresses and will contain:
 
 ## The Team
 
-![Photo of Joshua Hecke](/Documentation/images/profileB.jpg)
+<img src="/Documentation/images/profileB.jpg" alt="Photo of Joshua Hecke" width="50"/>
 * **Student Engineer:** Joshua Hecke (Queensland University of Technology) 
 
-![Photo of Tobias Fischer](/Documentation/images/profileA.jpg)
+<img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="50"/>
 * **Project Supervisor:** Tobias Fischer (Queensland University of Technology) 
