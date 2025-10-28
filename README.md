@@ -1,69 +1,87 @@
-# Small-Scale Underwater Remotely Operated Vehicle (ROV) for Research Applications
+# SubbyROV: A Small-Scale Underwater ROV
 
-## About The Project
+| [Image: Final SolidWorks Render (Design #4)] | [Image Placeholder: Size comparison with the standard BlueROV2] |
+| :---: | :---: |
+| *Final SolidWorks Render (Design #4)* | *Size comparison with the standard BlueROV2* |
+| [Image Placeholder: Initial prototyping workspace and components] | [Image Placeholder: Test-fitting the internal electronics tray] |
+| *Initial prototyping workspace and components* | *Test-fitting the internal electronics tray* |
 
-This repository contains the design, software, and documentation for the development of a small-scale, research-grade Remotely Operated Vehicle (ROV). The primary objective of this project is to create a fully operational vehicle to be used for demonstrations at the Queensland University of Technology (QUT) and to serve as a testbed for novel Machine Learning (ML) control pipelines.
+## About the SubbyROV Project
 
-The project addresses a gap in the availability of compact, low-cost, and modular ROV platforms suitable for educational and research environments. It investigates and implements hardware and software solutions to achieve robust functionality in a small form factor, a challenge not fully addressed by larger, commercial systems.
+This project, part of the EGH400 Research Project at Queensland University of Technology (QUT), documents the development of a small-scale, research-grade Remotely Operated Vehicle (ROV).
 
-## Key Features
+This repository will serve as the open-source hub for the project, containing all design specifications, CAD models, software, and simulation files.
 
-* **Modular Design:** An open-frame chassis allows for the easy mounting of sensors, payloads, and thrusters, simplifying maintenance and adaptation for future research.
-* **Machine Learning Ready:** Equipped with a companion computer capable of running ML pipelines for object detection, classification, and developing autonomous routines.
-* **Compact and Maneuverable:** The design focuses on a small form factor while incorporating a thruster configuration that allows for the performance of complex maneuvers.
-* **Robust Control System:** Utilizes the PX4 open-source autopilot software on a Pixhawk 6 for stable control and straightforward integration with the user interface and ML pipelines.
+### Motivation
 
-## Hardware
+While QUT possesses a capable BlueROV2, its large size, complex handling, and setup requirements (e.g., pool approval) make it impractical for rapid prototyping, small-scale tests, or educational demonstrations.
 
-The ROV is constructed using a combination of off-the-shelf and custom-designed components to balance performance, cost, and modularity.
+This project aims to fill that gap by creating a highly modular, cost-effective, and compact ROV. The primary objective is to build a fully operational vehicle that can serve as:
 
-| Component | Description |
+1.  A versatile testbed for novel Machine Learning (ML) control pipelines.
+2.  An accessible and portable platform for QUT open days and demonstrations.
+
+### At a Glance
+
+The SubbyROV is designed from the ground up to be small, agile, and computationally capable, using a mix of Commercial-Off-The-Shelf (COTS) and custom 3D-printed parts.
+
+| Specification | Details |
 | :--- | :--- |
-| **Companion Computer** | Raspberry Pi 5: Used for high-level processing, including communicating with the ground station, processing image data, and executing pathfinding and ML algorithms. |
-| **Autopilot** | Pixhawk 6: Manages thruster control, interfaces with the IMU for orientation, and uses a barometer for depth control. It runs the PX4 autopilot software. |
-| **Thrusters** | BlueRobotics T200: Selected for their reliability, thrust-to-weight ratio, and ease of integration with the Pixhawk 6. |
-| **Frame & Enclosure** | A hybrid design featuring an aluminum open-frame chassis for mounting components and a BlueRobotics acrylic enclosure to house and waterproof the core electronics. |
-| **Imaging** | Raspberry Pi Camera Module 3: Provides the visual data stream for manual operation and for the machine learning pipeline. |
-| **Communication**| Fathom-X module for wired communication and an audio-based module for wireless communication.|
-| **Power System** | A dedicated power management board and batteries designed to provide approximately one hour of operational time. |
+| **Project Name** | SubbyROV |
+| **Structure** | Blue Robotics 3" watertight enclosure on a custom aluminum Item profile frame. |
+| **Propulsion** | 4 x APISQUEEN U2 MINI thrusters with external waterproof ESCs. |
+| **Configuration** | Experimental 45-45 degree vectored thruster layout. |
+| **Main Controller** | Pixhawk 6X flight controller. |
+| **Software** | ArduSub firmware communicating via MAVLink protocol. |
+| **Camera** | Z-1 Mini gimballed camera. |
+| **Communication** | Fathom-X Tether Interface Boards for Ethernet-over-tether. |
+| **Power** | Tattu 5200mAh 4S (14.8V) LiPo Battery. |
+| **Est. Runtime** | ~32 minutes (at typical cruising draw). |
+| **Est. Cost** | ~$2,900 - $3,000 AUD. |
 
-## Software Stack
+## Project Status
 
-The software architecture is designed for modularity and to leverage existing, well-supported frameworks, facilitating rapid development and future expansion.
+**Current Status:** Phase 1 (Research and Design) is complete. The project is now actively in **Phase 2: Assembly and System Integration**.
 
-* **Autopilot Firmware:** PX4 is used on the Pixhawk 6 for real-time flight control and sensor integration.
-* **High-Level Control:** Python is the primary language for developing the ML pipeline and high-level control logic on the Raspberry Pi 5.
-* **Operating System:** The companion computer will run a Linux-based OS to support integration with PX4 and potential future use of the Robot Operating System (ROS 2).
-* **Simulation & Modelling:** MATLAB/Simulink will be used for initial control system modelling and simulation before physical testing.
-* **User Interface:** A basic Graphical User Interface (GUI) will be developed for manual vehicle operation.
+### Key Milestones Achieved
 
-## Project Structure
+* **Literature Review:** A comprehensive review of existing ROV designs was completed to inform key design philosophies.
+* **Design Iterations:** The project progressed through four major design iterations in SolidWorks, pivoting from an initial 6-thruster concept to the final, compact 4-thruster design to meet strict size and power constraints.
+* **Final CAD Model:** A complete, detailed CAD assembly of the final design has been produced.
+* **Procurement:** A full Bill of Materials (BOM) has been finalized. All critical long-lead components (Pixhawk 6X, thrusters, enclosure) have been procured and received.
+* **Initial Prototyping:** The internal electronics tray has been 3D-printed and assembled with the core components to test-fit and validate the SolidWorks design.
+* **Safety:** A comprehensive Risk Assessment (ID: 18339) has been submitted to the QUT HSE Hub, covering electrical, operational, and battery-handling hazards.
 
-The project follows a systems engineering approach, structured into several key phases:
+### Next Steps
 
-1.  **Literature Review & Planning:** A comprehensive review of existing small-scale ROV designs to inform the project's direction.
-2.  **Detailed Design:** Creation of complete CAD models, electrical schematics, and a bill of materials.
-3.  **Procurement & Assembly:** Sourcing components and constructing the mechanical frame and electronics enclosures.
-4.  **Integration:** Installation of electronics and development of the software for manual control.
-5.  **Testing & Validation:** A multi-stage testing process including static waterproofing tests, dynamic maneuverability tests, and performance validation in a controlled water environment.
-6.  **Final Reporting:** Comprehensive documentation of the design, methodology, and results.
+The project is now transitioning from the theoretical design phase to physical construction and validation.
 
-## Project Deliverables
+1.  **Phase 2: Assembly & System Integration**
+    * Complete the full physical assembly of the aluminum frame, thrusters, and watertight enclosure.
+    * Wire all internal electronics (Pixhawk, PDB, Fathom-X) and seal all cable penetrators.
+    * Flash the Pixhawk controller with ArduSub firmware and establish a communication link with the ground station.
+    * Simulate the ROV in ROS2/Gazebo using a URDF model to validate control algorithms and buoyancy.
+    * Design and add custom buoyancy modules based on the final assembled mass.
 
-The final deliverables for this project include:
+2.  **Phase 3: Testing & Validation**
+    * Conduct initial waterproofing and leak tests in a controlled tank.
+    * Ballast the ROV to achieve neutral buoyancy and a stable trim.
+    * Perform system identification and tune PID control loops for stable depth-holding and heading-holding.
+    * Validate the ROV's performance against the original project objectives.
 
-1.  A fully assembled and operational small-scale underwater ROV.
-2.  Complete CAD drawings and electrical schematics.
-3.  The control system software, including a basic GUI for manual operation.
-4.  A set of performance metrics demonstrating the ROV's capabilities.
-5.  A basic automation pipeline for ML model training and inference.
-6.  A final project report detailing the design process and results.
+## Repository Contents
 
-## Author
+This repository will be populated as the project progresses and will contain:
 
-* **Joshua Hecke** - *Student Engineer* - n11585382
+* **/CAD:** All SolidWorks 2023 part files, assembly files, and technical drawings for the final design.
+* **/URDF:** Robot Operating System (ROS2) models and Gazebo simulation files.
+* **/Software:** Configuration files for the ArduSub firmware and any custom control software.
+* **/Documentation:** The final project report, Bill of Materials (BOM), and assembly guides.
 
-## Acknowledgments
+## The Team
 
-* This project is submitted in partial fulfillment of the requirements for the EGH400 - Research Project 1 unit.
-* Queensland University of Technology (QUT), Faculty of Engineering.
+[Image Placeholder: Photo of Joshua Hecke]
+* **Student Engineer:** Joshua Hecke (Queensland University of Technology)
+
+[Image Placeholder: Photo of Tobias Fischer]
+* **Project Supervisor:** Tobias Fischer (Queensland University of Technology)
