@@ -3,13 +3,12 @@
 </p>
 
 # SubbyROV: A Small-Scale Underwater ROV
-| :--- |
-| ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) |
-| *Final SolidWorks Render (Design #4)* |
-| ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
-| *Final SolidWorks Render (Design WTE #4)* |
-| ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) |
-| *Test-fitting the internal electronics tray* |
+
+| ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) | ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
+| :---: | :---: |
+| *Final SolidWorks Render (Design #4)* | *Final SolidWorks Render (Design WTE #4)* |
+| ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) | ![Initial prototyping workspace and components](/Documentation/images/workshop.jpg) |
+| *Test-fitting the internal electronics tray* | *Initial prototyping workspace and components* |
 
 ## About the SubbyROV Project
 
@@ -59,7 +58,7 @@ The SubbyROV is designed from the ground up to be small, agile, and computationa
 
 ### Next Steps
 
-The project is now transitioning from the theoretical design phase to physical construction and validation.
+The project is now transitioning from the theoretical design phase to-physical construction and validation.
 
 1.  **Phase 2: Assembly & System Integration**
     * Complete the full physical assembly of the aluminum frame, thrusters, and watertight enclosure.
@@ -86,7 +85,7 @@ This repository will be populated as the project progresses and will contain:
 ## The Team
 
 <img src="/Documentation/images/profileB.jpg" alt="Photo of Joshua Hecke" width="100"/>
-Student Engineer: Joshua Hecke (Queensland University of Technology) 
+* **Student Engineer:** Joshua Hecke (Queensland University of Technology) 
 
 <img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="100"/>
-Project Supervisor: Tobias Fischer (Queensland University of Technology) 
+* **Project Supervisor:** Tobias Fischer (Queensland University of Technology)
