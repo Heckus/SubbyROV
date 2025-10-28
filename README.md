@@ -89,3 +89,4 @@ Student Engineer: Joshua Hecke (Queensland University of Technology)
 
 <img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="100"/>
 Project Supervisor: Tobias Fischer (Queensland University of Technology)
+Project Supervisor GitHub: [tobias-fischer](https://github.com/tobias-fischer)
