@@ -85,7 +85,7 @@ This repository will be populated as the project progresses and will contain:
 ## The Team
 
 <img src="/Documentation/images/profileB.jpg" alt="Photo of Joshua Hecke" width="100"/>
-* **Student Engineer:** Joshua Hecke (Queensland University of Technology) 
+Student Engineer: Joshua Hecke (Queensland University of Technology) 
 
 <img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="100"/>
-* **Project Supervisor:** Tobias Fischer (Queensland University of Technology)
+Project Supervisor: Tobias Fischer (Queensland University of Technology)
