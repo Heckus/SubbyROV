@@ -1,0 +1,39 @@
+﻿Mass properties of Camera_assembly
+     Configuration: Default
+     Coordinate system: -- default --
+
+
+Mass (user-overridden) = 69.00 grams
+
+
+Volume = 46135.21 cubic millimeters
+
+
+Surface area = 28155.28  square millimeters
+
+
+Center of mass: ( millimeters )
+        X = 145.40
+        Y = -0.30
+        Z = -8.96
+
+
+Principal axes of inertia and principal moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass.
+         Ix = ( 1.00, -0.08,  0.01)           Px = 16380.92
+         Iy = ( 0.08,  1.00,  0.01)           Py = 37133.06
+         Iz = (-0.01, -0.01,  1.00)           Pz = 38854.00
+
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass and aligned with the output coordinate system. (Using positive tensor notation.)
+        Lxx = 16521.78        Lxy = -1697.99        Lxz = 149.99
+        Lyx = -1697.99        Lyy = 36993.54        Lyz = 12.91
+        Lzx = 149.99        Lzy = 12.91        Lzz = 38852.65
+
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the output coordinate system. (Using positive tensor notation.)
+        Ixx = 22068.91        Ixy = -4729.01        Ixz = -89755.88
+        Iyx = -4729.01        Iyy = 1501351.16        Iyz = 199.71
+        Izx = -89755.88        Izy = 199.71        Izz = 1497675.73

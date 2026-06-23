@@ -1,0 +1,2030 @@
+Development of a Small-Scale Underwater
+   Remotely Operated Vehicle (ROV)
+
+
+                 Unit Code:     EGH490-2 - Research Project 2
+                 Assessment:    #1 - Final Project Delivery Report
+                 Supervisor:    Tobias Fischer
+
+
+
+
+                    Mechatronics Engineer:      Joshua Hecke1
+                    Student ID:                 n11585382
+                     Simulation Engineer:      Brad Edwards2
+                     Student ID:               n11585382
+
+
+
+
+  This report is submitted in partial fulfilment of the requirements for EGH490-2.
+                                                                                                       1
+
+
+
+                                              C ONTENTS
+I     Introduction                                                                                     1
+      I-A     Context & Motivation: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      1
+      I-B     Problem Statement: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     1
+      I-C     Objectives & Scope: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    2
+      I-D     Team Dynamics: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     2
+II    Literature Review                                                                                2
+      II-A    Literature Review Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . .        2
+      II-B    Evaluation of Literature Review Findings and New Literature . . . . . . . . . .          3
+III   Methodology & System Design                                                                     4
+      III-A  Design Goals and Iterative Design Process . . . . . . . . . . . . . . . . . . . .        4
+      III-B  Software and Hardware Selection . . . . . . . . . . . . . . . . . . . . . . . . . .      5
+             III-B1     Design and Simulation . . . . . . . . . . . . . . . . . . . . . . . . .       5
+             III-B2     Control Software . . . . . . . . . . . . . . . . . . . . . . . . . . . .      5
+      III-C  Material Selection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   5
+      III-D  Electronic System Selection and Design . . . . . . . . . . . . . . . . . . . . . .       6
+             III-D1     Payload . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+             III-D2     Power Distribution and Safety Control Loop . . . . . . . . . . . . .          6
+             III-D3     Flight Control and Propulsion . . . . . . . . . . . . . . . . . . . . .       6
+             III-D4     Payload and Video Integration . . . . . . . . . . . . . . . . . . . . .       6
+             III-D5     Communication Architecture . . . . . . . . . . . . . . . . . . . . . .        7
+             III-D6     System Architecture . . . . . . . . . . . . . . . . . . . . . . . . . . .     7
+IV    Implementation & Prototyping                                                                     7
+      IV-A   Design Phase . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      7
+      IV-B   Production Phase . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      7
+             IV-B1     Development Roadblocks . . . . . . . . . . . . . . . . . . . . . . . .          7
+             IV-B2     Buoyancy and Stability Design . . . . . . . . . . . . . . . . . . . . .         9
+      IV-C   Design Specification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   11
+V     Testing & Results                                                                               11
+              V-1       Thruster, Payload and Kill Switch Testing . . . . . . . . . . . . . . .       11
+              V-2       Simulation Testing . . . . . . . . . . . . . . . . . . . . . . . . . . . .    12
+              V-3       Physical Testing . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    14
+              V-4       Testing Comparison . . . . . . . . . . . . . . . . . . . . . . . . . . .      15
+VI    Discussion and Project Evaluation                                                               16
+               VI-1     Safety and Risks . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    16
+               VI-2     Environmental Impact . . . . . . . . . . . . . . . . . . . . . . . . . .      16
+               VI-3     Limitations and Weaknesses . . . . . . . . . . . . . . . . . . . . . .        16
+               VI-4     Goals and Objectives . . . . . . . . . . . . . . . . . . . . . . . . . .      18
+VII   Conclusion                                                                                      18
+References                                                                                            19
+VIII Appendices                                                                                       20
+     VIII-A Appendix A: Original Literature Review (from Project Proposal) . . . . . . . .            20
+            VIII-A1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        20
+            VIII-A2 Methodology and Scope . . . . . . . . . . . . . . . . . . . . . . . . .           21
+            VIII-A3 Key Design Themes . . . . . . . . . . . . . . . . . . . . . . . . . . .           21
+            VIII-A4 Hardware Selections . . . . . . . . . . . . . . . . . . . . . . . . . . .         22
+            VIII-A5 Software and Communication Frameworks . . . . . . . . . . . . . .                 22
+            VIII-A6 Control System Architectures . . . . . . . . . . . . . . . . . . . . . .          23
+            VIII-A7 System Modelling Approaches . . . . . . . . . . . . . . . . . . . . .             23
+     VIII-B Appendix B: Comprehensive Bill of Materials (BOM) & Full Budget . . . . . .               23
+     VIII-C Appendix C: Project Timelines . . . . . . . . . . . . . . . . . . . . . . . . . . .       25
+     VIII-D Appendix D: CAD Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          27
+     VIII-E Appendix E: Risk Assessment . . . . . . . . . . . . . . . . . . . . . . . . . . .         29
+                                                                                                            1
+
+
+
+
+      Development of a Small-Scale
+  Underwater ROV for Research Purposes
+                                   Joshua Hecke1 , Brad Edwards2
+                                    Supervisor: Tobias Fischer1,2
+                             Queensland University of Technology (QUT)
+
+
+
+   Abstract—This paper presents the development of                        I. I NTRODUCTION
+the SubbyROV, a small-scale, cost-effective Remotely
+Operated Vehicle (ROV) designed to address the             A. Context & Motivation:
+logistical and financial limitations of utilizing large-      Unmanned Underwater Vehicles (UUVs) and
+scale vehicles for academic research and educa-            Remotely Operated Vehicles (ROVs) have be-
+tional outreach at the Queensland University of
+Technology (QUT). While existing platforms like
+                                                           come indispensable tools for a vast range of
+the BlueROV2 are highly capable, their size often          applications, including oceanographic surveys, in-
+impedes rapid prototyping and algorithm testing            frastructure maintenance, and defense operations.
+due to deployment complexities. To bridge this             As technology has advanced, these vehicles have
+gap, an iterative systems engineering approach was         evolved from simple teleoperated platforms into
+employed to design a highly modular, miniature
+ROV leveraging Commercial Off-The-Shelf (COTS)
+                                                           complex autonomous systems capable of execut-
+components and custom 3D-printed Polylactic Acid           ing sophisticated missions. However, much of
+(PLA) structures. The mechanical design features a         the research and commercial development has
+compact 3-inch acrylic pressure hull housing densely       focused on large-scale, work-class vehicles or
+integrated electrical components, including a Pix-         highly specialized Autonomous Underwater Ve-
+hawk flight controller, Fathom-X tether interfaces,
+and an internal high-capacity battery. A significant
+                                                           hicles (AUVs). At the Queensland University
+innovation was the adoption of an underactuated            of Technology (QUT), the existing BlueROV2
+four-thruster configuration, which drastically mini-       platform, while highly capable, presents several
+mized the vehicle’s footprint while retaining essential    limitations for rapid prototyping and educational
+maneuverability. The software architecture utilizes        outreach. Its large size makes it cumbersome
+ArduSub and QGroundControl for teleoperation,
+supported by extensive hydrodynamic modeling and
+                                                           to deploy, and any testing requires formal pool
+a custom Stonefish digital twin to validate buoyancy       approval and significant logistical overhead. For
+and dynamic stability prior to physical deployment.        small-scale experiments, algorithm testing, and
+Physical testing in a controlled pool environment          classroom demonstrations, the BlueROV2 is often
+confirmed the waterproof integrity of the pressure         an overkill solution that impedes the pace of
+hull and successfully demonstrated the vehicle’s
+maneuverability under manual control. The results
+                                                           research.
+validate the SubbyROV as a viable, low-cost testbed.
+Ultimately, this project establishes a robust hard-        B. Problem Statement:
+ware and simulation foundation, setting the stage for
+future research into non-linear underactuated con-            Consequently, there is a distinct gap in the
+trol systems, autonomous navigation, and machine           availability of small-scale, low-cost, and modular
+learning integration.                                      ROV platforms that are computationally equipped
+                                                           for modern research. To address this, there is a
+                                                           clear need to design and develop a miniature,
+  Index Terms—Remotely Operated Vehicle (ROV),             modular ROV platform constructed primarily from
+Systems Engineering, QGroundControl, ArduSub,              Commercial Off-The-Shelf (COTS) components.
+Underactuated Control, Underwater Robotics, Small          This platform must maintain the agility and sensor
+Scale.                                                     capabilities required to act as a viable testbed
+                                                                                                           2
+
+
+
+for advanced control and perception algorithms,         member being requested to help in the design
+while being small enough to be easily deployed          of the digital twin and simulation software pro-
+in confined testing tanks without the extensive         gramming to allow the team to meet the deliver-
+logistical requirements of larger vehicles.             ables for the project. This evolution allowed for
+                                                        a more robust division of labor, enabling parallel
+C. Objectives & Scope:                                  development of the mechanical chassis, electrical
+                                                        integration, and digital simulation capabilities to
+   The primary objective of this project is to create
+                                                        meet the project’s ambitious deliverables.
+a fully operational, small-scale underwater ROV
+to serve as both a demonstrator and a flexible
+research testbed at QUT. Key objectives include:                    II. L ITERATURE R EVIEW
+   • Controlled Maneuverability: Achieving sta-         A. Literature Review Summary
+     ble, controlled diving and movement using a
+                                                           A comprehensive survey of existing literature
+     thruster configuration.
+                                                        reveals a distinct gap in the field of underwa-
+   • Autonomous Capabilities: Enabling the ex-
+                                                        ter robotics for small-scale, low-cost, and mod-
+     ecution of pre-programmed missions and pro-
+                                                        ular Remotely Operated Vehicles (ROVs) that are
+     viding the necessary hardware overhead to
+                                                        also computationally equipped for modern re-
+     support future autonomy pipelines.
+                                                        search. While the domain is populated with large,
+   • Modularity and Accessibility: Ensuring
+                                                        work-class vehicles for industrial applications and
+     the design is easily modifiable, utilizing
+                                                        highly specialised Autonomous Underwater Vehi-
+     open-source frameworks such as ROS2, Ar-
+                                                        cles (AUVs), these platforms are often financially
+     duSub/PX4, and MAVLink for seamless in-
+                                                        and logistically prohibitive for academic research
+     tegration of future sensors and payloads.
+                                                        and rapid prototyping [1]. This review synthesised
+   • Demonstrator Platform: Serving as an ed-
+                                                        key design philosophies and technical trade-offs
+     ucational tool for QUT demonstrations to
+                                                        from a range of academic papers and technical
+     showcase underwater robotics principles in a
+                                                        reports, establishing a theoretical foundation to
+     highly portable format.
+                                                        inform the design of a novel research platform.
+   • Document Finding: The findings from this
+     project will be opensourced, including the 3D         A primary theme is the fundamental decision in
+     SolidWorks models, ROS2 simulation files           chassis architecture, which presents a trade-off be-
+     and all documentation and findings.                tween modularity and hydrodynamic performance.
+                                                        Open-frame designs are consistently favoured for
+An original and revised project timeline found in
+                                                        research and educational platforms due to their
+VIII-B outlines the major tasks to be completed
+                                                        inherent modularity, which simplifies the process
+and their estimated duration. These timelines were
+                                                        of mounting, testing, and reconfiguring sensors,
+used when discussing with stakeholders and mak-
+                                                        thrusters, and other payloads, as seen in vehicles
+ing decisions about requesting support and refin-
+                                                        like the eROV [2]. This adaptability is paramount
+ing scope.
+                                                        for a vehicle intended to serve as a testbed. Con-
+                                                        versely, enclosed, torpedo-style hulls are chosen
+D. Team Dynamics:                                       when operational efficiency, speed, and endurance
+   As the project transitioned from the initial de-     are the primary drivers, as their streamlined form
+sign phase in the first semester to prototyping         minimises drag [3], [4]. For this project’s objec-
+and system integration in the second semester, the      tives, the principles of the open-frame design are
+scope and complexity of the development neces-          more closely aligned with the need for a flexible
+sitated a more collaborative systems engineering        and extensible research platform.
+approach. A key design challenge was ensuring all          Maneuverability in a compact form factor is
+electronic components could fit inside the pressure     another critical consideration, heavily influenced
+housing. The resolution of this challenge required      by thruster configuration. While simple 3-thruster
+additional time that was not accounted for in the       systems can provide basic motion [5], the liter-
+project timeline. This led to an additional team        ature indicates that full 6-DOF control is a key
+                                                                                                                      3
+
+
+
+enabler for complex inspection and intervention         VIII-A for further detail.
+tasks. This is typically achieved with six or more
+thrusters [6], [7]. A common and effective strategy     B. Evaluation of Literature Review Findings and
+is the use of a vectored thruster arrangement,          New Literature
+where horizontal thrusters are angled to provide
+coupled control of surge, sway, and yaw [1], [8].          During the first phase of the project, it was
+This approach allows for high agility and om-           found that the insights from the original literature
+nidirectional movement without a large physical         review were largely applicable to the design and
+footprint, a key idea that heavily influenced this      development of the medium scale ROV but not
+project’s propulsion system design.                     small scale ROVs. Using 6 thrusters to achieve
+                                                        6 DOF was found to be impractical for a small
+   The selection of onboard hardware reflects a
+                                                        scale ROV due to size and power consumption
+clear scalability based on mission complexity and
+                                                        constraints. This was also true for the use of a
+budget. At the lower end, simple microcontrollers
+                                                        companion computer such as a Raspberry Pi or
+like Arduino are sufficient for basic teleoperation
+                                                        Nvidia Jetson. These components, while useful
+and sensor reading [5], [9]. However, to serve as a
+                                                        for ML applications, were found to be too large
+viable testbed for modern algorithms, particularly
+                                                        and power hungry for the size of ROV being
+in computer vision and machine learning (ML), a
+                                                        designed. This led to further literature review to
+more powerful single-board computer, such as a
+                                                        find alternatives that would suit the size and power
+Raspberry Pi or Nvidia Jetson, is essential. These
+                                                        constraints of the small scale ROV.
+platforms provide the necessary processing power
+                                                           A paper by Sujan et al. (2024) [15] presented a
+for real-time video streaming, network communi-
+                                                        design for a small scale ROV that used 4 thrusters
+cation, and running inference models [8], [10]–
+                                                        in a vectored configuration to achieve underac-
+[12]. This distinction highlights the necessity of
+                                                        tuated control of the ROV as seen in Figure 1.
+selecting a companion computer that not only
+                                                        This design was found to be more suitable for the
+meets current needs but also provides headroom
+                                                        project as it allowed for a smaller footprint and
+for future computational expansion.
+                                                        lower power consumption, however the underac-
+   Finally, the software architecture and control       tuation resulted in the lack of independent pitch
+system design are integral to the vehicle’s ca-         control.
+pability. The Robot Operating System (ROS) is
+frequently cited as the framework of choice for
+complex, modular robotic systems due to its robust
+inter-process communication, extensive libraries,
+and available hardware drivers [7], [11]. While
+simpler platforms may use custom firmware, open-
+source solutions like ArduSub offer a powerful,
+community-supported alternative that can signifi-
+cantly accelerate development [13]. At the control
+level, the Proportional-Integral-Derivative (PID)
+controller is a foundational and ubiquitous method
+for achieving basic stability, such as depth and
+heading hold [6], [10]. However, its performance
+                                                        Fig. 1. 4-thruster vectored configuration for a small-scale ROV,
+can degrade in the presence of external distur-         demonstrating an underactuated layout to minimise footprint
+bances, leading more advanced projects to explore       and power consumption. Adapted from Sujan et al. (2024) [15].
+robust control techniques like Sliding Mode Con-
+trol or Fuzzy Logic controllers [5], [14]. These           A extension of this approach was considered by
+established ideas from the literature provide a clear   using 3D printed 45-degree brackets to provide
+benchmark against which this project’s design           each thruster with a vectored force. The benefit
+choices and practical progress can be evaluated.        of this design is that it reduces the number of
+The full literature review is available in Appendix     thrusters from six to four, thereby reducing the
+                                                                                                         4
+
+
+
+size of the battery and the required electronic        to multiplex communication channels between the
+speed controllers (ESCs). This is a key area of        surface control station, the companion computer,
+improvement for the small-scale ROV, as it allows      and high-bandwidth payloads such as IP cameras
+for a smaller hull, a reduced overall size, and cost   or imaging sonars over a single tether [18].
+reductions. However this approach was not backed          Simulation Environments: To validate con-
+by current literature and was eventually discarded     trol systems prior to physical deployment, highly
+in favour of a traditional 4-thruster configuration.   accurate simulation environments are required.
+   Due to sizing constraints found during the ini-     The Stonefish simulator has emerged as a state-
+tial design phase, lithium-ion battery packs were      of-the-art tool specifically designed for marine
+found to be too large and had to be replaced           robotics, offering realistic hydrodynamics, sensor
+with a smaller Lithium-ion Polymer (LiPo) bat-         simulations, and native ROS/ROS2 interfaces [19].
+tery. While LiPo batteries were selected for their     Recent updates to Stonefish have further expanded
+high energy density and discharge rates, their         its capabilities to support machine learning re-
+use introduces significant safety considerations.      search, improved thruster modeling, and advanced
+An issues paper by the Australian Competition          tether dynamics, making it an ideal platform for
+& Consumer Commission (ACCC) highlights the            testing small-scale underwater vehicles in complex
+primary hazard associated with Li-ion batteries as     environments [20].
+’thermal runaway’, a rapid, self-sustaining tem-          Underactuated Control: Reducing the number
+perature increase [16]. This event can be trig-        of thrusters to save weight and power necessi-
+gered by physical impact (a key risk during ROV        tates the use of underactuated control methods.
+operations) or water ingress leading to a short        Such methods must account for the highly non-
+circuit. For this project, these risks underscore      linear and coupled dynamics of underwater ve-
+the criticality of a robust, impact-resistant, and     hicles operating with fewer control inputs than
+completely watertight enclosure for the battery,       degrees of freedom. Recent studies have demon-
+as well as strict adherence to balanced charging       strated the efficacy of nonlinear model predictive
+protocols to mitigate these hazards and ensure the     control (MPC) and behavior trees for achieving
+safe operation of the ROV.                             complex, agile maneuvers in underactuated AUVs
+   Additionally, new literature on the MAVLink         [21], [22]. Additionally, finite-time tracking con-
+communication protocol was found, as the small         trol techniques utilizing command filters and dis-
+size ROV was not large enough to house a full          turbance observers have been proposed to mitigate
+companion computer. This led to the use of a           the effects of unmodeled dynamics and ocean
+Pixhawk flight controller as the main computer,        currents [23]. Sliding mode controllers have also
+which utilizes the MAVLink protocol to com-            been validated for managing heading and diving
+municate with the surface station. MAVLink is          planes in underactuated systems, ensuring robust
+a lightweight, header-only message marshalling         performance under uncertain conditions [24].
+library initially designed for micro air vehicles
+[17]. This protocol is widely used in the drone           III. M ETHODOLOGY & S YSTEM D ESIGN
+community and has been adapted for use in under-
+                                                         The methodology employed in this project fol-
+water vehicles. The use of MAVLink allows for a
+                                                       lowed the principles of systems engineering, with
+reliable and efficient communication link between
+                                                       a strong emphasis on literature review, iterative
+the ROV and the surface station, which is essential
+                                                       design, and rigorous testing.
+for remote operation and data transfer.
+   Furthermore, additional literature was reviewed
+in the context of recent project developments:         A. Design Goals and Iterative Design Process
+   Ethernet Integration: In miniature ROV ar-             The development of the ROV adhered to a
+chitectures where spatial constraints prevent large    systems engineering design framework centered
+umbilical tethers, internal networking must be         around two primary mechanisms for progression:
+strictly managed. Recent developments emphasize        iterative design and stakeholder approval. The phi-
+the use of compact Ethernet switches or splitters      losophy of iterative design recognizes that com-
+                                                                                                          5
+
+
+
+plex engineering systems, particularly those oper-     additional work is required to evaluate all the
+ating in challenging environments like underwater,     necessary dampening parameters for the 6-DOF
+rarely achieve optimal configuration in a single       modeling approach, this was deemed an accept-
+pass. By employing continuous cycles of model-         able trade-off for reducing the time required to
+ing, feedback, and refinement, potential integra-      achieve accurate simulations.
+tion issues can be identified early and corrected         2) Control Software: This project followed
+systematically. To complement this, stakeholder        similar control software structures to literature,
+approval served as the primary quality and require-    utilizing QGroundControl as the main ground
+ments gate. Rather than relying solely on internal     control station software for operation and man-
+verification, formal reviews with key stakeholders     ual control. This open-source software, commonly
+ensured that design decisions remained closely         used for robotic and drone control, was chosen
+aligned with the overarching research goals, bud-      due to its extensive support for the Pixhawk flight
+getary constraints, and operational safety require-    controller architecture. This was paired with Ar-
+ments before the project could transition into         duSub, an open-source firmware built on top of the
+physical fabrication and development. Specifically,    ArduPilot project, which provides the necessary
+For each cycle a 3D model supporting the design        control algorithms and interfaces for ROV oper-
+was produced and a meeting with the supervisor         ation. QGroundControl was used to load the Ar-
+was held to discuss the design. If the design passed   duSub software onto the Pixhawk flight controller
+it would move into development and if changes          via USB. Once connected, the Pixhawk’s parame-
+needed to be made to meet the stakeholders ideal       ters were modified via QGroundControl. Another
+criteria these were documented in detail.              strength was connecting the camera stream to
+                                                       QGroundControl, with plans to also control a
+B. Software and Hardware Selection                     3-axis camera gimbal using commands sent via
+   1) Design and Simulation: For this project,         QGroundControl. The base computer running this
+intensive 3D modeling was required; SolidWorks         software can use either Linux or Windows due to
+2025 was selected as the main modeling tool.           QGroundControl’s cross-compatibility. Most tests
+This choice was based on several factors, with the     were conducted using an Arch Linux-based lap-
+main being its mass properties function, which can     top; however, for this ROV, a Windows computer
+dynamically calculate the center of mass (COM)         is recommended due to additional camera control
+and, with some additional techniques, the center       software that can be utilized. The additional soft-
+of buoyancy (COB). To support this software,           ware for the gimbal camera is called Dragonfly,
+Blender was also used to export the 3D model           which can be found on the manufacturer’s website.
+into a watertight 3D mesh for dynamic simulation       It allows for additional camera features to be used,
+tools. For digital twin simulation, the open-source    including integrated AI object tracking and night
+software used was Stonefish [19], specifically the     vision. The manufacturer also provides a custom
+ROS2 interface of Stonefish. Once the weight           version of QGroundControl for Windows with
+parameters of the design were calculated with          Dragonfly integration; however, this was not tested
+SolidWorks, the 3D model was exported and im-          due to operating system incompatibility [25].
+ported into Blender, where any holes in the mesh
+were filled using Blender’s remesh tools. This STL     C. Material Selection
+file was then imported into a customized scene            The materials used in this design were se-
+programmed in the Stonefish package, with its          lected based on factors like cost, accessibility
+sensors and thruster locations being added to the      and suitability for the project. For the main pres-
+STL model. The main strength of this method is         sure hull the design used a pre-existing pres-
+that Stonefish calculates the hydrodynamics based      sure hull product from BlueRobotics. This 3-inch
+on the STL model and the weight parameters,            diameter pressure hull had been pre-tested and
+completely removing the need for manual hy-            came with assembly instructions. The datasheet
+drodynamic calculations or expensive and time-         specifies a maximum depth for each component,
+consuming CFD simulations. While this means            with 100 meters being the max depth for the
+                                                                                                         6
+
+
+
+acrylic hull. This selection was crucial and custom       2) Power Distribution and Safety Control Loop:
+designed pressure hulls were deemed to be too          To handle the high-current demands of the
+time-consuming and expensive for this project.         thrusters while maintaining system safety, a ded-
+The key frame material used was Item aluminium         icated power distribution and switching architec-
+profiles, these are light-weight, waterproof and can   ture was designed. The primary power source is a
+be ordered in custom lengths. Another strength         Tattu 2200mAh 4S LiPo battery, providing a nom-
+of using Item aluminium profile is the designed        inal 14.8V. To prevent high-current arcing across
+grooves which allows for seamless attachment of        the main external power switch, a low-voltage
+additional components to the frame. For external       control loop is implemented. This is achieved as
+mounting to the hull, BlueRobotics clamps were         a small auxiliary BEC steps the battery voltage
+secured around the cylinder to ensure the pressure     down to 12V to power a Blue Robotics external
+hull remains rigidly mounted to the frame. To          switch. When this switch is toggled on, it ener-
+secure these clamps and other external connec-         gizes the coil of an automotive relay, closing the
+tions to the aluminium frame, marine-grade 316         high-power circuit. Once the relay is energized,
+stainless steel bolts and screws were utilized.        raw battery power flows through a Holybro PM02
+The selection of stainless steel was critical to       power module, which provides critical voltage
+minimize galvanic corrosion between the fasteners      and current telemetry to the flight controller via
+and the aluminium frame, thereby preventing rust       serial communication, while stepping down the
+and ensuring the structural integrity of the vehicle   voltage to 5V to power the Pixhawk. The switched
+during underwater operations. Custom 3D-printed        14.8V line then feeds into a Matek Systems Power
+mounts were also developed to secure auxiliary         Distribution Board (PDB). The PDB distributes
+components, such as the Z-1Mini micro gimbal           raw battery power to the high-draw thrusters,
+camera. The materials used for 3D printing were        lights, and camera, while utilizing its integrated
+PLA and water-based resin, which were chosen           regulators to supply 12V to the onboard Fathom-
+as the most cost-effective, entry-level materials      X board and 5V to the Auvidea M80 Ethernet
+for printing. Finally, EVA foam was selected as        module.
+the buoyancy material; chosen for its high com-           3) Flight Control and Propulsion: The core
+mercial accessibility and low density of 85 kg/m3 ,    flight control is managed by a Holybro Pixhawk
+it performed exceptionally well and was easy to        6X Mini flight controller running the ArduSub
+customize.                                             open-source firmware, the main interface with this
+                                                       is through the Pixhawk’s Ethernet port. The Pix-
+D. Electronic System Selection and Design              hawk reads real-time IMU sensor data to run sta-
+   During the development of the ROV, the system       bilization loops and execute pilot commands. The
+architecture was modified multiple times, initially    propulsion system consists of four APISQUEEN
+using an onboard companion computer like a pi4         U2 Mini underwater thrusters arranged in an un-
+as the main interface between the base station and     deractuated configuration (two horizontal, two ver-
+the flight controller. However, this setup had to      tical). The Pixhawk controls these thrusters using
+be modified due to size constraints. Below details     pulse-width modulation (PWM) signals sent to the
+the final components and architecture used in the      thrusters’ integrated electronic speed controllers
+ROV.                                                   (ESCs), allowing for dynamic control of depth,
+   1) Payload: To demonstrate the capabilities         yaw, surge, and pitch/roll stabilization.
+of the ROV, a high-powered underwater light               4) Payload and Video Integration: The pri-
+from BlueRobotics was selected as the mounted          mary payload consists of an XF-Z-1MINI gimbal
+payload. The use of the Item aluminium frame           camera inside the housing and a Blue Robotics
+on the bottom allows for future custom payload         Lumen Subsea Light mounted to the frame below
+mounts to be designed without large frame design       the housing. The camera captures high-definition
+changes. This comes with the caveat that for larger    video and streams it directly to the surface via
+payloads a recalibration of the buoyancy elements      RTSP over the Ethernet switch. Additionally, the
+may be required.                                       camera’s three-axis stabilization gimbal is con-
+                                                                                                         7
+
+
+
+trolled by the Pixhawk via serial (UART) com-         placement of the thrusters. Figure 3 is the initial
+mands. The Lumen light provides high-intensity        design layout of the modified BlueROV2 to the
+illumination for underwater visibility, with its      left and its comparison to the original BlueROV2
+brightness managed directly by the Pixhawk via        to the right found in Figure 4.
+a PWM signal.                                            This initial design was then taken to the
+   5) Communication Architecture: The commu-          project’s main stakeholder for evaluation with the
+nication architecture follows a tethered model. The   result being a series of design improvements. The
+primary data link is a tethered connection via a      stakeholder felt the overall profile was too large
+Fathom-X tether interface board system, which         and needed to be reduced by around half the
+provides high-bandwidth, low-latency communi-         size. This engineering challenge led to a second
+cation between the ROV and the surface control        version being designed with modifications to the
+station. At the surface, a base computer running      external frame. The feedback was identical and
+QGroundControl is connected via USB to a hand-        it was clear that the internal design needed to
+held game controller for manual operation, and        be overhauled completely to meet the small form
+via Ethernet to a Fathom-X surface board. This        factor criteria. It was decided that to meet the
+board translates standard Ethernet signals into a     tight space constraints and off-the-shelf compo-
+two-wire differential signal for transmission down    nent limitations, it would be best to remove as
+the 50 m slim Fathom ROV tether. Onboard the          much internal components from the design. This
+ROV, a matching Fathom-X ROV board receives           included:
+the signal and converts it back to standard Eth-         • All internal ESCs removed, with plans to use
+ernet. This Ethernet line is routed to an Auvidea           external ESCs attached to the thrusters.
+M80 Ethernet module, which acts as an onboard            • The main companion computer, with plans to
+network switch, distributing network traffic to the         rely on inputs from the tether system.
+companion interfaces and the IP camera.                  • Internal wiring management components,
+   6) System Architecture: A system diagram                 with plans to design custom connections for
+found in 2 shows the complete system architecture           the modular frame system.
+of the ROV. Note that ground connections have         This new design also introduced a key limitation
+been omitted from this diagram.                       to the design, with two thrusters being removed
+                                                      to save internal wiring space and external mount-
+     IV. I MPLEMENTATION & P ROTOTYPING
+                                                      ing space. This change pivots the design to an
+A. Design Phase                                       underactuated ROV system, relying on 4 thrusters
+   The project started using the BlueROV2’s de-       instead of the standard 6 thrusters found in the
+sign layout and internal components as a baseline.    BlueRov2 design. The design was now supported
+This was selected as the BlueROV2 is a well           by an experimental thruster configuration seen in
+documented and proven platform, which made it         Figure 5 and a reduced bare-bones internal layout
+an ideal candidate for a starting point for this      seen in Figure 6.
+project. The task requirements also specifically         This design was taken to the project’s main
+stated that the BlueROV2 was too large, making its    stakeholder for evaluation, the key modifications
+profile the maximum size allowed for this project,    and their ramifications were explained, and the
+because of this the design was modified with          design was approved for fabrication.
+downsizing being the main objective. The first
+modification was removing the external battery        B. Production Phase
+that the BlueROV2 carries below the main tube
+and modifying the internals to include the battery.      1) Development Roadblocks: Several key chal-
+This was done to reduce the overall profile of the    lenges and design revisions emerged during the
+ROV. The next step was to remove the buoyancy         early prototyping and assembly phases, primarily
+foam around the BlueROV2 and design a bare            relating to spatial constraints and electrical inte-
+thruster layout, with future plans to use simula-     gration:
+tions to optimize the additional buoyancy and the
+                                                                                                                                                                             8
+
+
+
+                                                           Surface Station
+
+
+              Fathom ROV     2-Wire Comm      Fathom-X             Ethernet     Base Computer       USB          Handheld
+              Tether (50m)                    (Surface)                        (QGroundControl)                  Controller
+
+                                                      External                             ROV Submersible
+                                                    Power 7V-min
+                                                                                                                               Tattu 2200mAh     14.8V
+                                                                                                                                   4S Lipo                  Small 12V BEC
+          2-Wire Comm
+
+
+                                                                                                                                      14.8V                         12V
+                                   PDB 5V
+                                   Ethernet                                                                           UART
+                Fathom-X                           Ethernet Module              Ethernet        Pixhawk 6X                                                   Blue Robotics
+                                                                                                                               Holybro PM02
+                 (ROV)                                   M80                                        Mini                                                        Switch
+                             PDB 12V                                                                                   5V
+
+
+                                                            Ethernet (RTSP)
+
+                                                                                                                                      14.8V
+                                       PDB 14.8V     XF-Z-1MINI               UART
+  Legend                                              (Camera)
+        Power
+        Data / Control                                                                                                                              12V (Gate)
+                                                                                                                              Automotive Relay
+
+
+                                       PDB 14.8V   Lumen Subsea               PWM
+                                                       Light
+                                                                                                                                      14.8V
+
+
+
+
+                                       PDB 14.8V SQUEEN Thrusters             PWM                                              Mateksys PDB
+                                                          (x4)                                                                 XT60 w/ BEC
+
+
+
+
+Fig. 2. System Architecture and Wiring Diagram for the SubbyROV, illustrating the power distribution and data bus routing
+between the Pixhawk, Fathom-X tether, and auxiliary payloads.
+
+
+
+  1) Thruster Configuration Reversion: The                                                                designed 3D-printed chassis to optimize in-
+     initial, experimental vectored thruster lay-                                                         ternal space. This custom chassis resolved
+     out lacked empirical validation and was not                                                          several secondary design discrepancies:
+     supported by simulation or physical testing.
+                                                                                                             • Battery Downsizing: The battery
+     Given the complex hydrodynamics, tight
+                                                                                                               was sequentially downsized from a
+     project timelines, and a lack of established
+                                                                                                               29, 000 mAh Lithium-Ion pack in the
+     literature for this specific geometry, the ex-
+                                                                                                               conceptual design, to a 5, 200 mAh
+     perimental configuration was abandoned. In-
+                                                                                                               LiPo pack, and ultimately to a compact
+     stead, the design reverted to a conventional
+                                                                                                               2, 200 mAh LiPo pack to fit within the
+     layout comprising two vertical and two hor-
+                                                                                                               hull.
+     izontal thrusters. This configuration is well-
+                                                                                                             • Video Transmission: The camera could
+     documented in literature and natively sup-
+                                                                                                               not stream video directly through the
+     ported by open-source control software like
+                                                                                                               Pixhawk flight controller as initially
+     QGroundControl, thereby mitigating control
+                                                                                                               planned, requiring a dedicated Ethernet
+     system development risk.
+                                                                                                               connection.
+  2) Spatial Constraints and Component Lay-
+                                                                                                             • Relay Control Voltage: The automotive
+     out: During early physical assembly, major
+                                                                                                               relay used for the power switch logic
+     spatial conflicts arose within the pressure
+                                                                                                               had a control voltage limit 2 V lower
+     hull. The initial CAD layout did not ac-
+                                                                                                               than the battery’s nominal voltage, ne-
+     count for the volume occupied by inter-
+                                                                                                               cessitating an auxiliary voltage step-
+     nal wiring harnesses, component connectors,
+                                                                                                               down BEC to prevent coil damage.
+     and bulky thruster cables. Consequently, the
+     open-source BlueROV2 internal mounting                                                        Resolving these spatial and electrical limitations
+     plates were replaced by a custom, iteratively                                               was a critical prerequisite before buoyancy cal-
+                                                                                                                           9
+
+
+
+
+Fig. 3. Initial Design Layout of the modified BlueROV2,
+showing the removal of the external battery tube to reduce the
+vehicle’s overall vertical profile.
+
+
+
+                                                                 Fig. 6. Reduced barebones internal layout for the Version 2
+                                                                 design, eliminating internal ESCs and the companion computer
+                                                                 to fit within the 3-inch pressure hull.
+
+
+                                                               culations and hydrodynamic simulations could be
+                                                               performed, which in turn delayed the finalization
+                                                               of thruster positioning and buoyancy foam distri-
+                                                               bution.
+                                                                  To solve these issues the BlueRobotics internal
+                                                               mount was removed, and a custom internal mount
+                                                               was designed. Along with physical prototyping
+                                                               this custom mount was iterated several times and
+                                                               finalized when all components could fit inside.
+Fig. 4. Size comparison between the initial modified design Figure 7 and Figure 8 show the updated internal
+(bottom) and the original BlueROV2 (top), highlighting the mount and the physical construction of the new
+need for further miniaturization to meet the project’s spatial
+constraints.
+                                                               internal mount.
+
+
+
+
+                                                                 Fig. 7. Updated 3D-printed internal mount designed for
+                                                                 Version 3, iteratively refined to safely house the downsized
+                                                                 LiPo battery, Pixhawk, and power distribution electronics.
+
+                                                                    2) Buoyancy and Stability Design: Once all
+                                                                 the internal components were fitted the model
+                                                                 was ready for calculating the required buoyancy
+                                                                 foam to offset the weight of the ROV to create
+                                                                 slightly positive net buoyancy. First the weight and
+Fig. 5. Experimental 4-thruster vectored configuration pro-      center of mass of all the internal components were
+posed for the Version 2 design, aiming to provide coupled        calculated using SolidWorks Mass Properties, then
+control with a minimal footprint.                                with the external frame. The calculated weight
+                                                                 allowed for the calculation of the required volume
+                                                                 of buoyancy foam needed to offset the weight of
+                                                                                                                                10
+
+
+
+                                                                    restoring force from this was required for ROV
+                                                                    operation. SolidWorks was used to calculate the
+                                                                    center of buoyancy by solving the COM of the
+                                                                    volume of water displaced by the full ROV. How-
+                                                                    ever before this was fabricated the team wanted
+                                                                    additional validation of the buoyancy design.
+                                                                       The design was exported into an STL, where a
+                                                                    profile based on its mass properties was defined
+                                                                    and a simple buoyancy environment test was cre-
+                                                                    ated in the Stonefish ROS2 package. This test was
+                                                                    run to validate the buoyancy design and to ensure
+                                                                    that the ROV was stable in water; the simulator
+                                                                    can be seen in Figure 9. The results showed that
+                                                                    the COB was too far forward and the ROV would
+                                                                    pitch up when floating. In Stonefish the mass
+                                                                    parameters were then modified based on qualita-
+                                                                    tive results from the simulator until a desirable
+                                                                    transient response was achieved. These tweaks
+                                                                    were then applied to the SolidWorks model, which
+                                                                    then was sent back to the simulator for evaluation.
+                                                                    This iterative process was repeated until the native
+                                                                    mass properties produced an ideal response. Once
+                                                                    this was confirmed the mount was fabricated and
+                                                                    can be seen attached in Figure 10.
+
+
+
+
+Fig. 8. Physical assembly of the Version 3 internal mounting
+chassis, fabricated from PLA to securely integrate the electrical
+components within the pressure hull.
+
+
+
+the ROV. The additional weight from the foam and
+its mounting solution were then added to refine
+the calculation one more time. Once the volume of
+foam was calculated the handle part in the original
+design was modified to hold the required foam.
+Due to the complexity and size of this part it was
+printed with a resin printer, which was not a part
+of the original budget or design. The results of
+this change will be discussed further, however the                  Fig. 9. Buoyancy test results simulated in Stonefish for the
+part needed to be calibrated to ensure the COB                      initial handle design, revealing an improper center of buoyancy
+                                                                    that caused the ROV to pitch upward.
+was above the COM and aligned in all other axis.
+This was an important requirement as the passive
+                                                                                                                          11
+
+
+
+
+                                                                Fig. 11. Side-profile comparison rendering of the full Subby-
+                                                                ROV assembly against the original BlueROV2 [26], demon-
+                                                                strating the significant reduction in overall footprint.
+
+
+
+
+                                                                Fig. 12. Top-down comparison rendering of the SubbyROV
+                                                                and the BlueROV2 [26], emphasizing the reduced width and
+                                                                compact modular frame.
+
+
+
+Fig. 10. Physical assembly of Version 3 featuring the custom                  V. T ESTING & R ESULTS
+resin-printed buoyancy handle, designed to correct the center
+of buoyancy and provide a passive restoring force.                 1) Thruster, Payload and Kill Switch Test-
+                                                                ing: The first test was thruster control via the
+                                                                QGroundControl software. The experimental setup
+C. Design Specification
+                                                                can be seen in Figure 13. The ROV was powered
+   After the buoyancy calculations were finalised               via an external power supply and the thrusters
+the design was ready for testing. The final pa-                 were connected to the power distribution board,
+rameters can be found in Table I. While Table I                 the PWM signals were connected to the Pixhawk
+highlights the costs of key components, a compre-               and the Pixhawk was connected to the base com-
+hensive full project budget and Bill of Materials               puter via USB. This allowed for thrusters to be
+(BOM) can be found in Appendix VIII-B.                          powered and tested via QGroundControl and the
+   The SolidWorks drawings of the full assembly,                configuration and PWM signals could be switched
+internal assembly and BOM at attached in Ap-                    and modified to match the configuration. Care was
+pendix B with the Figures 11 and 12 showing the                 taken to not fully power the thrusters on land as
+SolidWorks Renders compared to the BlueROV2                     this could damage the motor. The high-powered
+[26], these figures visually show the size differ-              flashlight payload was also tested in an identical
+ence of the two ROVs.                                           manner and could be controlled via a switch on the
+                                                                                                                       12
+
+
+
+                                                         TABLE I
+                                 F INAL D ESIGN AND M ASS PARAMETERS OF THE S UBBY ROV
+
+                    Parameter                                                                           Value
+                    Dimensions & Volume
+                    Length                                                                         308.90 mm
+                    Width                                                                          362.26 mm
+                    Height                                                                         232.88 mm
+                    Displaced Volume                                                                  4.833 L
+                    Mass & Buoyancy
+                    Calculated Dry Weight (SolidWorks)                                               4.568 kg
+                    Actual Dry Weight (Physical)                                                     4.750 kg
+                    Calculated Buoyancy (Freshwater)                                                 4.833 kg
+                    Net Buoyancy (Calculated)                                                        0.083 kg
+                    Center of Mass (Origin @ COM on SolidWorks file)
+                    COM (XG , YG , ZG )                                                 (0.00, 0.00, 0.00) mm
+                    Moments of Inertia (at COM)
+                    Ixx                                             32, 530, 093.03 g · mm2 (0.03253 kg · m2 )
+                    Iyy                                             35, 146, 249.06 g · mm2 (0.03515 kg · m2 )
+                    Izz                                             53, 369, 738.41 g · mm2 (0.05337 kg · m2 )
+                    Ixy                                                 950, 747.74 g · mm2 (0.00095 kg · m2 )
+                    Ixz                                                 692, 473.29 g · mm2 (0.00069 kg · m2 )
+                    Iyz                                             −487, 455.42 g · mm2 (−0.00049 kg · m2 )
+                    Financials & Key Component Costs
+                    Fathom-X Tether Interface (Qty 2)                                           $424.30 AUD
+                    Watertight Enclosure (3” set)                                               $417.57 AUD
+                    XF-Z-1MINI PC Board                                                         $363.98 AUD
+                    Fathom ROV Tether (50m)                                                     $303.43 AUD
+                    Pixhawk 6X Kit                                                              $300.00 AUD
+                    APISQUEEN U2 Mini Thrusters (Qty 4)                                         $254.60 AUD
+                    Lumen Subsea Light                                                          $212.42 AUD
+                    Total Estimated Cost (BOM)                                                $2, 884.38 AUD
+
+
+
+                                                                     multimeter to ensure that all voltage and current
+                                                                     levels were at expected levels. This test revealed
+                                                                     a flaw with the power flow design: when the kill
+                                                                     switch is turned off, the design’s goal was for
+                                                                     power to be cut to all high-powered electronics.
+                                                                     Because this interruption occurs after the PM02,
+                                                                     the Pixhawk remains powered, allowing the bat-
+                                                                     tery level to be monitored. While this functioned
+                                                                     flawlessly in testing, in the finalized design, the
+                                                                     tether system (the ROV’s communication link to
+                                                                     the surface) is powered by the PDB, meaning
+                                                                     this monitoring feature is lost upon triggering the
+Fig. 13. Experimental setup for initial dry lab testing, enabling
+validation of the power distribution, PWM signal routing, and
+                                                                     kill switch. This is an acceptable trade-off for the
+QGroundControl teleoperation before hull integration.                safety and simplicity of the design.
+                                                                        2) Simulation Testing: Two types of simulation
+                                                                     were done during the scope of this project. The
+handheld controller. Once the thrusters were con-                    first and main simulation was led by Brad and
+firmed to be working, the custom kill switch was                     used the software package Stonefish. A secondary
+then added between the PM02D and the power                           supporting simulation was performed in MATLAB
+distribution board. The switch was tested via a                      to model the underactuated dynamics while the
+                                                                                                                 13
+
+
+
+Stonefish package was still being designed. This
+was conducted to validate the underactuated de-
+sign choice.
+      a) Matlab Underactuated LQI design Study:
+To validate the underactuated design choice, a
+comprehensive simulation study was conducted
+in MATLAB to test the stability and control of
+the ROV architecture. The study derived a 3-
+DOF planar model and implemented a discrete-
+time Linear Quadratic Integral (LQI) controller
+with an anti-windup scheme. The results demon-
+strated that this control architecture provides ro-
+bust waypoint tracking, successfully compensating     Fig. 14. Simulation results demonstrating robust LQI tracking
+for non-linear quadratic drag, actuator saturation,   performance on the true Non-Linear plant.
+and severely mismatched dynamics. It must be
+distinctly noted that this simulation utilized a
+generalized ROV model with differing physical
+parameters rather than the exact specifications of
+the ROV constructed in this project. This abstrac-
+tion was necessary due to missing parameter data
+in the current design, specifically the complex
+hydrodynamic coefficients required to formulate
+the non-linear system of equations. Furthermore,
+the study established a critical operational re-
+quirement for this control methodology: the LQI
+controller relies on full state feedback. For this
+approach to be physically valid, the ROV must
+have accurate, real-time measurements of both
+absolute position and depth, as relying on dead
+reckoning leads to terminal position drift. Despite   Fig. 15. Simulation output diagram showing the underactuated
+                                                      ROV moving between waypoints. This graph contains 2 sim-
+these limitations, the study serves as a robust       ulations, with one starting at 0,0,0 and the other at a random
+proof-of-concept. The successful stabilization of     initial position
+the complex underactuated plant mathematically
+proves that this LQI control approach is highly
+resilient and can be directly applied to control      the exported meshes. Custom ROS2 nodes were
+the fully designed ROV in future operations once      developed to interface with the simulated vehicle,
+the necessary sensory and hydrodynamic data are       enabling direct manual control via teleoperation
+acquired. This robust performance is visualized in    scripts and the application of discrete ”step inputs”
+Figure 14 and Figure 15. Information about this       to the thrusters. Through these inputs, the team
+work can be found in the open-source SubbyROV         evaluated the complex underactuated thruster dy-
+repository [27]                                       namics and overall vehicle stability. A dedicated
+      b) Stonefish Dynamics Study: Building upon      IMU data logging node was employed to mon-
+the initial buoyancy validation, the Stonefish sim-   itor the real-time kinematic response, measuring
+ulation environment was extensively expanded by       angular velocities, linear accelerations, and calcu-
+the simulation engineer to perform a compre-          lating the net forces acting on the body frame,
+hensive underwater dynamics study. The physi-         as seen in Figure 16. This high-fidelity testing
+cal properties of the ROV, including its mass,        allowed the team to observe how the four-thruster
+moments of inertia, and center of gravity, were       configuration behaves dynamically before physical
+accurately modeled within the simulation utilizing    deployment, providing a deep understanding of its
+                                                                                                                     14
+
+
+
+maneuvering characteristics and structural stability               similar hazards to the original test site as can
+under varied control inputs. A visualization of                    be seen on the testing Risk Assessment found in
+this advanced simulation environment in action is                  Appendix VIII-E, however, these hazards could
+presented in Figure 17.                                            be controlled much more effectively than those
+                                                                   at the original test site while still getting a test
+                                                                   in the water. Once simulations were completed
+                                                                   and the design was validated, the team moved
+                                                                   onto physical testing of the ROV at the new site.
+                                                                   Due to time constraints, only two simple tests
+                                                                   occurred in the water: the first being a waterproof
+                                                                   test, and the second being two manually controlled
+                                                                   mobility tests in the water. The waterproof testing
+                                                                   was conducted first, where the ROV’s internals
+                                                                   were removed and the chassis was sealed shut.
+                                                                   The chassis was then submerged for a period of
+                                                                   time to ensure that water did not ingress into the
+                                                                   chassis. When the test was complete, the internal
+Fig. 16. Real-time kinematic response logging in the Stonefish     hull was checked for any water, and it was found
+simulator, extracting simulated IMU data to analyze angular
+velocities and linear accelerations.
+                                                                   to be completely dry. With this test completed, the
+                                                                   manual control tests could take place. The goal of
+                                                                   these tests was to qualitatively assess the dynamics
+                                                                   of the ROV and to observe how the four-thruster
+                                                                   configuration behaves dynamically, providing an
+                                                                   understanding of its maneuvering characteristics
+                                                                   and structural stability. These results could then
+                                                                   be compared to the Stonefish simulation, and if
+                                                                   the digital twin accurately represented the physi-
+                                                                   cal ROV, this would validate the simulation and
+                                                                   allow it to be used for more advanced control
+                                                                   development. Due to time constraints and lack of
+                                                                   measurement resources available at the test site,
+                                                                   an unmeasured starting point was used, and no
+                                                                   set path could be implemented. This meant that
+                                                                   measured IMU pitch data found in Figure 18
+                                                                   cannot be compared directly to the simulation
+                                                                   data; however, it does show that in future tests the
+                                                                   ROV has the capabilities to produce comparable
+                                                                   quantitative results.
+                                                                      Figures 19, 20 and 21 show the ROV sub-
+                                                                   merged underwater under manual control. Using
+                                                                   a specialised phone case, underwater videos were
+Fig. 17. The expanded Stonefish simulation environment used        captured during these tests. The first test occurred
+for testing thruster dynamics and vehicle stability under manual
+step inputs.                                                       after dark and showcased the powerful flashlight
+                                                                   payload in action along with very basic opera-
+  3) Physical Testing: Due to aforementioned                       tional capabilities. The second test focused on
+roadblocks with the design, a fully measured                       demonstrating the current mobility of the ROV
+physical test was no longer possible. To still                     and how it compares to the simulation. Operation
+meet project requirements, the physical test site                  occurred through line of sight with the camera
+was moved to a private pool. This test site had                    stream being presented on the control computer
+                                                                                                                             15
+
+
+
+
+                                                                   Fig. 20. SubbyROV during Manual Test 2, demonstrating
+                                                                   basic maneuverability and structural stability under line-of-
+                                                                   sight teleoperation.
+
+Fig. 18. IMU pitch log recorded during Test 1, capturing the
+physical vehicle’s pitch response during unmeasured manual
+control inputs in the pool environment.
+
+
+
+as additional guidance.
+
+
+
+
+                                                                   Fig. 21. Alternative view of the SubbyROV during Manual
+                                                                   Test 2, confirming waterproof integrity and buoyancy balance
+                                                                   in a controlled pool environment.
+
+
+
+                                                                      • Stronger Buoyancy: During operation, the
+                                                                        ROV exhibited significantly greater buoyancy
+Fig. 19. SubbyROV operating submerged during Manual Test                than anticipated. This was evident in its ten-
+1. The environment is actively illuminated by the high-intensity        dency to ascend faster when compared to
+Lumen Subsea Light payload.                                             simulations, 1 half of the layer foam inserts
+                                                                        were removed to compensate for this.
+   While the first manual test was shorter and                        • COB Location Differences: Viewing the
+was conducted in the dark to show the basic                             response of the Real ROV it was clear the real
+capabilities of the ROV, the second ran for roughly                     COB was further forward when compared to
+10 minutes and consumed the charge of the LiPo                          the simulation. This was evidenced by the
+battery down to 10 percent. This revealed the                           ROV sitting slightly nose up in the water.
+ROV’s standard operational time and that extended                     • Similar Dynamics: While there were some
+use of the high power payload significantly affects                     slight differences between the simulation and
+operational time. Test videos can be located in the                     real ROV properties, the test revealed that
+SubbyROV repository [27].                                               the simulator’s prediction of how the ROV
+   4) Testing Comparison: When comparing the                            dynamically moves through the water was
+real word dynamic response to thruster step inputs                      qualitatively similar to the real test, proving
+(manual control) and the Stonefish simulations,                         the simulations effective modeling of the
+distinct properties worth noting include:                               underwater underactuated system.
+                                                                                                            16
+
+
+
+ VI. D ISCUSSION AND P ROJECT E VALUATION                pact. However, the current biodegradability is lim-
+   1) Safety and Risks: Throughout the develop-          ited in natural environments, persisting in landfills
+ment and testing of the SubbyROV, strict ad-             for decades if not properly composted. The choice
+herence to safety and risk management was pri-           of PLA was primarily driven by its ease of use in
+oritized. A comprehensive risk assessment was            rapid prototyping and its suitability for printing
+developed prior to any physical construction or          the custom structural components required for
+testing, outlining potential hazards such as elec-       the ROV. While not as durable or water-resistant
+trical shock, manual handling injuries, and water-       as materials like ABS or PETG, PLA provided
+related risks. To mitigate environmental and pub-        a balance of accessibility, cost-effectiveness, and
+lic hazards during testing, operations were relo-        sustainability for the scope of this project. Elec-
+cated from public open-water settings to a pri-          trical components and wiring were sourced from
+vate pool. This environment allowed for strict           existing electronics and surplus materials where
+control over the testing site while continuing           possible, following a reduce and reuse philoso-
+to satisfy the safety guidelines. Electrical safety,     phy to minimize waste. The use of off-the-shelf
+specifically concerning the high-capacity Lithium-       components aligns with a sustainable design ap-
+Polymer (LiPo) batteries, was a critical focus.          proach by leveraging existing technologies rather
+Following safety protocols, a specialized LiPo-          than developing new, resource-intensive solutions
+safe battery bag was utilized at all times during        from scratch. Moving forward, opportunities ex-
+transport, storage, and charging. The only instance      ist to further enhance the environmental sustain-
+the battery was removed from this fire-retardant         ability of the SubbyROV. Exploring alternative
+bag was during active installation and operation         biodegradable filaments with improved mechan-
+within the ROV’s sealed pressure hull. Looking           ical properties or water resistance could provide
+forward, the overall risk profile for future work        a more durable yet eco-friendly option. Addi-
+and continuous use of this ROV remains manage-           tionally, incorporating sensors and components
+able but requires diligence. Future developments         made from recycled materials or implementing a
+such as the integration of advanced sensors or           comprehensive end-of-life recycling program for
+autonomous algorithms will introduce new com-            the ROV would contribute to a circular economy
+plexities, particularly regarding the handling of        model. Overall, the project demonstrates that cost-
+ultra-low voltage electronics and the prevention         effective, small-scale robotics can be developed
+of water ingress into newly added components.            with a conscious consideration for environmental
+Operators must ensure ongoing maintenance of             impact.
+the waterproof seals, proper storage of batteries,          3) Limitations and Weaknesses: There are
+and adherence to standard operating procedures           some limitations that need to be acknowledged
+to mitigate risks of electrical failure or loss of the   when looking at the results of this project. These
+vehicle. The complete approved Risk Assessment           limitations were driven by a number of factors
+has been included in Appendix VIII-E for refer-          including time constraints, the size of the team
+ence.                                                    working on the project and the hardware limita-
+   2) Environmental Impact: Environmental con-           tions of the off-the-shelf components used. Listed
+siderations and the sustainability of the materials      below are key limitations that must be considered
+used were important throughout the development           before the result is evaluated:
+process. The majority of the frame and compo-               • External Sensing: The only sensors on the
+nents for the ROV were 3D printed using PLA                    design are the internal sensors located in the
+(Polylactic Acid) filament for prototyping. PLA                camera gimbal and the Pixhawk controller.
+is a bioplastic derived from renewable resources               There is currently no external depth sensor,
+such as corn starch or sugarcane, making it a more             Doppler velocity log sensor, or sensor that
+environmentally friendly alternative to traditional            can capture position data. This means fur-
+petroleum-based plastics [28]. Its biodegradability            ther modifications must be made for fully
+under specific industrial composting conditions                autonomous operations using standard tech-
+further reduces its long-term environmental im-                niques.
+                                                                                                      17
+
+
+
+• Operational Time: The current operational              maximum ingress holes was 7, this limit the
+  time is roughly 10 minutes based on a single           amount of external components that could
+  test. While this was deemed acceptable for             be added to the ROV design, including 2
+  the project due to easy battery accessibility          additional thruster mounts or external sensors
+  for manual recharging, it is not suitable for          such as a depth sensor or doppler velocity
+  long term or repeated operations and would             log. A custom plate with more holes may be
+  need to be significantly improved.                     required when increasing the DOF or adding
+• Thruster Configuration: The thruster con-              additional sensors. This same issue occurs
+  figuration will require additional control ef-         with the selected PDB, this board has 2 BEC
+  fort and this still won’t remove all effects           slots(5V, 12V) and 6 14.8V slots which in
+  of underactuation perfectly. The result of this        the current design are all in use.
+  was seen in the MATLAB simulation as surge           • Pressure Housing: The pressure housing
+  movements cause the pitch angle to oscillate,          sold by BlueRobotics recommended the use
+  which would ruin any undampened camera                 of a release valve which automatically reg-
+  recordings.                                            ulates the difference between internal and
+• Material Limitations: The 3D printed PLA               external pressure. Due to ingress hole lim-
+  components are not suitable for long-term              its(7) and no specific depth requirements in
+  submersion in water and will need to be                the task criteria, the use of a release valve
+  replaced with a more appropriate material              was omitted to save space. If future iterations
+  such as fabricated aluminium parts. This was           of the project were to dive deeper, a release
+  apparent as the water-based resin buoyancy             valve would be required to ensure the ROV
+  handle warped around the edges after drying,           can safely withstand the pressure changes.
+  and PLA mounts would split over continuous           • Internal Temperature: The effect of pro-
+  use without proper printing properties.                longed use and the internal components heat-
+• Operational Limitations: As the only source            ing up was not measured or documented,
+  of communication with the Pixhawk is the               if the components are used for prolonged
+  tether, any additional inputs for using an             periods it is unknown how this would effect
+  EKF are traditionally done with a Pi com-              the ROV. Internal sensors on the Pixhawk
+  municating over UART need to be modified.              and the Z1-MINI can measure their board
+  One example of this would be processing the            temperatures, so future performance tests on
+  camera stream received on the base computer,           this may be required.
+  then sending commands back via the tether.        When reviewing the difference between the sim-
+  This process would need to be custom built        ulation test and the pool test, there were some
+  and tested as current software would not have     noticeable differences. This parameter differences
+  this feature built in.                            can be traced back to the below assumptions and
+• ArduSub Implementation: The ArduSub               idealisations
+  software stack is well suited for this project,      • Missing Models: When designing the 3D
+  however, due to the time constraints of this           files for the final design, some elements were
+  project, only basic customisation was con-             not modeled as no files existed or were
+  ducted. It is expected that future modifica-           not easily accessible. These include the ESC
+  tions to the ROV design would require further          tubes attached to the Thrusters and all inter-
+  software customisation which may not be                nal and external wires. The lack of these com-
+  well documented due to experimental use of             ponents in the CAD model and simulation
+  the software as the main controller.                   results is evident in the pool test results in
+• COTS Components: The reliance on COTS
+                                                         the way of a different COM and COB. This
+  components, while beneficial for rapid devel-          can be address via onsite modification of the
+  opment, introduces dependencies on manu-               ROV or extensive measurement and addition
+  facturer specifications and support. The effect        of missing models in the digital twin.
+  of this was evident as the pressure housings         • Weight Assumptions: Using Solidwork’s
+                                                                                                          18
+
+
+
+      built in density calculator is only an approxi-        board AI operations, and insufficient thruster
+      mation of weight as it assumes materials are           authority for unsupported autonomous ma-
+      homogenous and uniform. The actual weight              neuvers.
+      of each component may vary depending on              • Goal 4: Demonstrator Capabilities: This
+      the manufacturing process (e.g. 3D printing)           goal was achieved; the project was able to
+      and any additional parts added to the final            produce a working ROV prototype that was
+      design. A scale could be used to weigh each            capable of quick and easy setup. There are
+      component more accurately                              many possible academic uses of this solu-
+   • Idealistic environment parameters: Param-               tion ranging from simple demonstration to
+      eters such as water temperature and water              advanced research on underactuated control
+      salinity were not factored into the simulation.        design, small scale AUV development, and
+      In the pool test, the waters parameters were           low cost sensor development platforms.
+      not considered or measured, in turn affecting        • Goal 5: Document Findings: This goal was
+      the dynamics of the ROV.                               also achieved as all findings and documenta-
+   • 3D Print Weights: 3D print weights were                 tion has been made available for open-source
+      calculated using the slicing software for each         use. These can be found on the associated
+      model and then added together. However, the            GitHub repository [27].
+      weight of each part may vary depending on         The result of testing revealed the ROV can per-
+      the manufacturing process (e.g. 3D printing)      form basic manual operation and camera stream,
+      and any additional parts added to the final       which when compared to the custom Stonefish
+      design.                                           simulator designed for further control and au-
+   • Real and 3D Mismatches: While the real             tonomous work demonstrates the ROV behaves
+      ROV was designed to be 1-1 scale with the         in a manner consistent with the simulation. The
+      3D CAD model, there were some unavoid-            main difference between Overall, the project was
+      able differences. These include slight angles     successful in that it met most of the outlined goals
+      changes and component mountings.                  and objectives. It also highlighted the importance
+   4) Goals and Objectives: After considering the       of time and budget constraints on project scope,
+results above, the goals and objectives of the          particularly when working in small teams or solo.
+project can be evaluated against the success cri-       The request for additional team support halfway
+teria outlined in the project plan:                     through the project allowed for the completion
+   • Goal 1: Cost Effective Small Scale ROV:            of the electrical integration and documentation
+      The project successfully delivered a cost-        which would have otherwise not been completed,
+      effective small scale ROV with off-the-shelf      demonstrating the importance of seeking support
+      components. The solution could demonstrate        when needed.
+      manual operation, customisation, easy han-
+      dling and payload integration while being                        VII. C ONCLUSION
+      simple enough to set up and operate.                 The SubbyROV project successfully delivered
+   • Goal 2: Controlled Maneuverability: The            a cost-effective, small-scale Remotely Operated
+      project delivered a solution that could demon-    Vehicle designed specifically for research and aca-
+      strate controlled diving and movement us-         demic demonstration. By leveraging off-the-shelf
+      ing a thruster configuration. With the caveat     components, custom 3D-printed PLA structures,
+      that these operations need to be supported        and an iterative design process informed by ro-
+      by future control implementations for stable      bust simulations, the team overcame significant
+      operation.                                        mechanical and electrical integration challenges.
+   • Goal 3: Autonomous Capabilities: This has          The transition to an underactuated four-thruster
+      not been achieved yet due to the constraints      configuration not only reduced the vehicle’s foot-
+      of the project. Limiting factors which pre-       print and complexity but also established a unique
+      vented this goal include lack of external sens-   platform for advanced control system research.
+      ing, limited processing capabilities for on-      Physical testing in a controlled pool environment
+                                                                                                                             19
+
+
+
+validated the waterproof integrity of the custom                      International Conference on Underwater System Tech-
+chassis and demonstrated the vehicle’s maneu-                         nology: Theory and Applications (USYS), 2016, pp. 207–
+                                                                      211.
+verability under manual teleoperation. While the                  [5] Ö. Yildiz, R. B. Gökalp, and A. E. Yilmaz, “A review
+project achieved its primary goals of creating a                      on motion control of the underwater vehicles,” in 2009
+functional, modular testbed, it also highlighted                      International Conference on Electrical and Electronics
+                                                                      Engineering - ELECO 2009, 2009, pp. II–337–II–341.
+key areas for improvement, particularly regarding                 [6] A. Marzbanrad, J. Sharafi, M. Eghtesad, and R. Kamali,
+operational time, material durability, and the lack                   “Design, construction and control of a remotely operated
+of external state-estimation sensors.                                 vehicle (rov),” Volume 7: Dynamic Systems and Control;
+                                                                      Mechatronics and Intelligent Machines, Parts A and B,
+   Looking forward, the next major phase of the                       01 2011.
+project will pivot from hardware development to                   [7] C. Mai, M. v. Benzon, F. F. Sørensen, S. S. Klemmensen,
+advanced software and control implementation.                         S. Pedersen, and J. Liniger, “Design of an autonomous
+This future work, which will be spearheaded by                        rov for marine growth inspection and cleaning,” in 2022
+                                                                      IEEE/OES Autonomous Underwater Vehicles Symposium
+Brad, focuses heavily on establishing robust au-                      (AUV), 2022, pp. 1–6.
+tonomous capabilities for the SubbyROV. A pri-                    [8] J. K, R. S M, S. S V, and K. K, “Remotely operated
+mary objective will be the integration of external                    underwater vehicle (rov),” in 2023 2nd International
+                                                                      Conference on Advancements in Electrical, Electronics,
+sensors such as Doppler Velocity Logs (DVL) and                       Communication, Computing and Automation (ICAECA),
+high-resolution depth sensors to facilitate accurate                  2023, pp. 1–4.
+state estimation and localization. Utilizing the dig-             [9] A. F. Ali and M. R. Arshad, “Design and development
+                                                                      remotely operated vehicle for anode ship hull inspection,”
+ital twin developed in Stonefish and the theoretical                  in 2017 IEEE 7th International Conference on Underwa-
+groundwork from the MATLAB LQI study, Brad                            ter System Technology: Theory and Applications (USYS),
+will continue the development and deployment                          2017, pp. 1–5.
+                                                                 [10] H. Khoirunnisa, S. C. Abadi, P. Anggraeni, and Rudi,
+of advanced control laws capable of handling                          “Polrov (polman education platform of underwater
+the highly non-linear, underactuated dynamics of                      robot) monitoring navigation design using pid controller
+the ROV. Furthermore, future work will explore                        method,” in 2024 IEEE International Conference on
+                                                                      Computing (ICOCO), 2024, pp. 225–230.
+the implementation of Machine Learning (ML)
+                                                                 [11] A. Martins, J. Almeida, C. Almeida, B. Matias, S. Ka-
+pipelines and computer vision algorithms, leverag-                    pusniak, and E. Silva, “Eva a hybrid rov/auv for under-
+ing the onboard IP camera to enable autonomous                        water mining operations support,” in 2018 OCEANS -
+navigation, object detection, and path following.                     MTS/IEEE Kobe Techno-Oceans (OTO), 2018, pp. 1–7.
+                                                                 [12] D. R. Yoerger, M. Curran, J. Fujii, C. R. German,
+By building upon the solid mechanical and elec-                       D. Gomez-Ibanez, A. F. Govindarajan, J. C. Howland,
+trical foundation established in this project, these                  J. K. Llopiz, P. H. Wiebe, B. W. Hobson, K. Katija,
+subsequent autonomous control developments will                       M. Risi, B. H. Robison, C. J. Wilkinson, S. M. Rock,
+                                                                      and J. A. Breier, “Mesobot: An autonomous underwater
+transition the SubbyROV from a manually op-                           vehicle for tracking and sampling midwater targets,” in
+erated prototype into a fully capable, intelligent                    2018 IEEE/OES Autonomous Underwater Vehicle Work-
+Autonomous Underwater Vehicle (AUV).                                  shop (AUV), 2018, pp. 1–7.
+                                                                 [13] V. A. M. Jorge, P. D. d. C. Gava, J. R. B. F. Silva,
+                                                                      T. M. Mancilha, W. Vieira, G. J. Adabo, and C. L.
+                      R EFERENCES                                     Nascimento, “Vita1: An unmanned underwater vehicle
+                                                                      prototype for operation in underwater tunnels,” in 2021
+ [1] M. Vasileiou, N. Manos, and E. Kavallieratou, “A low-            IEEE International Systems Conference (SysCon), 2021,
+     cost 3d printed mini underwater vehicle: Design and              pp. 1–8.
+     fabrication,” in 2021 20th International Conference on      [14] N. Jayasundere and S. Gunawickrama, “Underwater rov
+     Advanced Robotics (ICAR), 2021, pp. 390–395.                     with fuzzy logic motion control,” in 2016 IEEE Inter-
+ [2] E. H. Binugroho, R. Sanggar Dewanto, and D. Pramadi-             national Conference on Information and Automation for
+     hanto, “erov: Preliminary design of 5 dof rov using 6            Sustainability (ICIAfS), 2016, pp. 1–6.
+     thrusters configuration,” in 2018 International Electron-   [15] M. Sujan, J. Howlader, M. Alam, and M. A. I. Tapu,
+     ics Symposium on Engineering Technology and Applica-             “Structure design of underwater micro robot,” Modern
+     tions (IES-ETA), 2018, pp. 281–287.                              Mechanical Engineering, vol. 14, pp. 12–24, 01 2024.
+ [3] V. Kopman, N. Cavaliere, and M. Porfiri, “Masuv-1: A        [16] Australian Competition & Consumer Commission
+     miniature underwater vehicle with multidirectional thrust        (ACCC), “Lithium-ion batteries issues paper,” December
+     vectoring for safe animal interactions,” IEEE/ASME               2022.
+     Transactions on Mechatronics, vol. 17, no. 3, pp. 563–      [17] MAVLink, “Introduction · mavlink developer guide,”
+     571, 2012.                                                       Mavlink.io, 2009. [Online]. Available: https://mavlink.io
+ [4] Z. M. Zain, M. M. Noh, K. A. Ab Rahim, and N. Harun,             /en/
+     “Design and development of an x4-rov,” in 2016 IEEE         [18] P. Szymak, P. Piskur, and K. Naus, “Underwater robotic
+                                                                                                                              20
+
+
+
+     system for reservoir maintenance,” Journal of Vibroengi-          ter vehicle for offshore platform monitoring and inter-
+     neering, vol. 18, no. 6, pp. 4166–4176, 2016.                     vention,” in 2018 IEEE/OES Autonomous Underwater
+[19] P. Cieślak, “Stonefish: An advanced open-source sim-             Vehicle Workshop (AUV), 2018, pp. 1–6.
+     ulation tool designed for marine robotics, with a ros        [34] B. M. M. Anwar, M. A. Ajim, and S. Alam, “Remotely
+     interface,” in OCEANS 2019-Marseille. IEEE, 2019,                 operated underwater vehicle with surveillance system,” in
+     pp. 1–6.                                                          2015 International Conference on Advances in Electrical
+[20] M. Grimaldi, P. Cieślak, and N. Gracias, “Stonefish: Sup-        Engineering (ICAEE), 2015, pp. 255–258.
+     porting machine learning research in marine robotics,”       [35] A. Laidani, M. Boudria, I. Faci, A. Bouhamri, O. Keb-
+     arXiv preprint arXiv:2502.11887, 2025.                            dani, L. Rahmoun, Z. Bellahcene, and M. Bouhamida,
+[21] C. Ferreira et al., “Controlling an underactuated auv as          “Design and modeling of a low-cost observation class rov
+     an inverted pendulum using nonlinear model predictive             for dam inspection,” in 2022 2nd International Confer-
+     control and behavior trees,” in 2023 IEEE International           ence on Advanced Electrical Engineering (ICAEE), 2022,
+     Conference on Robotics and Automation (ICRA). IEEE,               pp. 1–6.
+     2023, pp. 1–7.                                               [36] S. Mintchev, E. Donati, S. Marrazza, and C. Stefanini,
+[22] X. Zhang et al., “Path following control of underactuated         “Mechatronic design of a miniature underwater robot
+     auv based on improved model predictive control,” in 2023          for swarm operations,” in 2014 IEEE International Con-
+     IEEE Conference. IEEE, 2024, pp. 1–6.                             ference on Robotics and Automation (ICRA), 2014, pp.
+[23] J. Xu et al., “Underactuated auv nonlinear finite-time            2938–2943.
+     tracking control based on command filter and disturbance     [37] J. Tang, Z. Chen, B. Fu, W. Lu, S. Li, X. Li, and
+     observer,” Sensors, vol. 19, no. 23, p. 5196, 2019.               X. Ji, “Rov6d: 6d pose estimation benchmark dataset for
+[24] S. Pandey et al., “Modelling and motion control of an             underwater remotely operated vehicles,” IEEE Robotics
+     underactuated autonomous underwater vehicle,” in 2021             and Automation Letters, vol. 9, no. 1, pp. 65–72, 2024.
+     IEEE International Conference. IEEE, 2021, pp. 1–6.          [38] H. Qi, X. Cao, L. Lv, Z. Cong, L. Lin, and D. Zhang,
+[25] ALLXF, “Z-1Mini Intelligent 4K Full-Color Night                   “A design of high mobility auv cost $325,” in 2020
+     Vision Micro Gimbal Camera,” accessed: 2026-05-26.                IEEE/OES Autonomous Underwater Vehicles Symposium
+     [Online]. Available: https://allxf.com/product/z-1mini-i          AUV, 2020, pp. 1–3.
+     ntelligent-4k-full-color-night-vision-micro-gimbal-cam       [39] D. Wettergreen, C. Gaskett, and A. Zelinsky, “Au-
+     era/                                                              tonomous guidance and control for an underwater robotic
+[26] “Blue robotics - rov and marine robotics systems and              vehicle,” in Proceedings of the International Conference
+     components,” Blue Robotics, 2014. [Online]. Available:            on Field and Service Robotics (FSR’99), Pittsburgh, USA,
+     https://bluerobotics.com/                                         1999.
+[27] J. Hecke and B. Edwards, “Subbyrov,” 2026. [Online].         [40] S. Zavari, A. Heininen, J. Aaltonen, and K. T. Koskinen,
+     Available: https://github.com/Heckus/SubbyROV                     “Early stage design of a spherical underwater robotic
+[28] A. K. Trivedi, M. Gupta, and H. Singh, “Pla based                 vehicle,” in 2016 20th International Conference on Sys-
+     biocomposites for sustainable products: A review,”                tem Theory, Control and Computing (ICSTCC), 2016, pp.
+     Advanced Industrial and Engineering Polymer Research,             240–244.
+     vol. 6, no. 4, pp. 382–395, 2023, biodegradable Polymers     [41] M. S. M. Aras, F. A. Azis, L. W. Teck, S. S. Abdullah,
+     for Engineering Applications. [Online]. Available: https:         and A. F. N. A. Rahman, “System identification of a
+     //www.sciencedirect.com/science/article/pii/S254250482            prototype small scale rov for depth control,” in 2015 10th
+     3000167                                                           Asian Control Conference (ASCC), 2015, pp. 1–6.
+[29] E. Coccolo, C. Delea, F. Steinmetz, R. Francescon,
+     A. Signori, C. N. Au, F. Campagnaro, V. Schneider,
+     F. Favaro, J. Oeffner, B.-C. Renner, and M. Zorzi,                             VIII. A PPENDICES
+     “System architecture and communication infrastructure
+     for the robovaas project,” IEEE Journal of Oceanic           A. Appendix A: Original Literature Review (from
+     Engineering, vol. 48, no. 3, pp. 716 – 739, 2023, cited      Project Proposal)
+     by: 14. [Online]. Available: https://www.scopus.com/i
+     nward/record.uri?eid=2-s2.0-85149859077&doi=10.11               1) Introduction: Unmanned Underwater Vehi-
+     09%2fJOE.2023.3234710&partnerID=40&md5=eae7014               cles (UUVs) have become indispensable tools for
+     c76875eb1e3344d0a23279343                                    a vast range of applications, including oceano-
+[30] I. Segovia Ramı́rez, P. Bernalte Sánchez, M. Papaelias,
+     and F. P. Garcı́a Márquez, “Autonomous underwater           graphic surveys, infrastructure maintenance, and
+     vehicles and field of view in underwater operations,”        military defence [29], [30]. As technology has
+     Journal of Marine Science and Engineering, vol. 9, p.        advanced, these vehicles have evolved from simple
+     277, 03 2021.
+[31] H. Choi, S. Chung, H. Park, and J. Seo, “Design and          teleoperated platforms into complex autonomous
+     control of a convertible rov,” in 2012 Oceans - Yeosu,       systems capable of executing sophisticated mis-
+     2012, pp. 1–7.                                               sions [29]. However, the literature reveals that a
+[32] C. Ulu, O. Canbak, M. U. Altunkaya, H. Taşkin, and
+     S. Yayla, “Development of the marmarov remotely op-          significant portion of research and commercial de-
+     erated underwater vehicle system,” in 2017 International     velopment has focused on large-scale, work-class
+     Artificial Intelligence and Data Processing Symposium        vehicles or highly specialised Autonomous Un-
+     (IDAP), 2017, pp. 1–6.
+[33] M. Pagliai, A. Ridolfi, J. Gelli, A. Meschini, and B. Al-    derwater Vehicles (AUVs), which are often finan-
+     lotta, “Design of a reconfigurable autonomous underwa-       cially and logistically inaccessible for educational
+                                                                                                                      21
+
+
+
+institutions or rapid prototyping research [1]. This     basic 3-DOF motion [5], to fully actuated 6 or
+is due to the cost of setting up demonstrations          8 thruster systems enabling full 6 DOF control
+with large scale ROVs and larger ROV designs call        [6], [7]. The placement of thrusters in a vectored
+for larger scale prototyping solutions which may         arrangement is common for achieving high agility,
+not be realistic. This has created a gap for small-      allowing for coupled control of surge, sway, and
+scale, low-cost, and modular ROV platforms that          yaw from a set of horizontal thrusters [1], [8].
+are not only suitable for demonstration but are also        Open-frame designs, such as those seen in
+powerful enough to serve as testbeds for advanced        The literature presents a clear dichotomy between
+control and perception algorithms. The aim of this       open-frame and enclosed, torpedo-style chassis
+review is to explore the current state-of-the-art in     designs.
+small-scale ROV design by analysing key themes
+in existing literature, thereby identifying best prac-
+tices and informing the design methodology for a
+novel research platform.
+   2) Methodology and Scope: The literature re-
+view was conducted using a systematic approach,
+focusing on peer-reviewed journal articles, con-
+ference papers, and technical reports from the             Fig. 22. (a) Open-frame chassis (eROV) [2]
+last decade. The search was primarily conducted
+using the database IEEE Xplore, with keywords
+including “small-scale ROV”, “underwater vehicle
+design”, “ROV control systems”, and “modular             Fig. 23. (b) Enclosed hull design (MASUV-1) [3]
+underwater robotics”. The review is structured to        Fig. 24. Examples of ROV chassis designs: (a) open-frame
+cover key design themes, hardware and software           and (b) enclosed hull
+selections, control system architectures, and sys-
+tem modelling approaches, providing a compre-               Open-frame designs, such as those seen in the
+hensive overview of the current state of small-          MarmaROV and eROV , are praised for their
+scale ROV research. The scope of this review is          modularity, allowing for easy mounting of sen-
+limited to reviewing current literature on ROV           sors, payloads, and thrusters. This configuration
+design methodology and hardware selections.              simplifies maintenance and is highly adaptable for
+   3) Key Design Themes:                                 research platforms. Figure 25 illustrates the impact
+      a) Chassis and Mechanical Design.: The
+physical architecture of an ROV is a foundational
+design choice that dictates its hydrodynamic per-
+formance, modularity, and durability. The litera-
+ture presents a clear dichotomy between open-
+frame and enclosed, torpedo-style chassis designs.
+Open-frame designs, such as those seen in the
+KCROV [31], MarmaROV [32], and eROV [2],
+are praised for their modularity, allowing for easy
+mounting of sensors, payloads, and thrusters. This
+configuration simplifies maintenance and is highly
+adaptable for research platforms. In contrast,
+streamlined, enclosed hulls are often selected to
+minimise hydrodynamic drag for greater efficiency
+                                                         Fig. 25. Comparison of different thruster orientations and their
+and speed, as demonstrated by the MASUV-1 [3]            impact on maneuverability. [33]
+and X4-ROV [4]. The thruster configuration is
+critical for maneuverability, with designs ranging       of different thruster orientations on maneuverabil-
+from underactuated 3-thruster systems providing          ity, highlighting the trade-offs between simplicity
+                                                                                                          22
+
+
+
+and control complexity. Having a vectored thruster      while advanced research platforms like EVA and
+arrangement allows for more maneuverability with        Mesobot are equipped with a comprehensive array
+a smaller form factor. It is seen in figure 25,         of high end high-cost sensors, including Doppler
+that the orientation of the upward facing thrusters     Velocity Logs (DVLs) for measuring velocity rel-
+can significantly impact the vehicles ability to roll   ative to the seafloor (˜$12,500), USBL positioning
+and pitch efficiently. This makes the amount and        systems for underwater localization (˜$3000), and
+orientation of thrusters a key consideration as the     high-resolution waterproofed cameras for visual
+goal for the QUT demonstration ROV is to have a         navigation (˜$300) [11], [12].
+small form factor, while still being able to perform          b) Control Hardware.: The selection of on-
+complex maneuvers.                                      board electronics reflects a trade-off between cost,
+      b) Material Selection and Waterproofing.:         computational power, and development complex-
+Material selection directly impacts the vehicle’s       ity. At the low-cost end of the spectrum, microcon-
+weight, durability, and operational depth. For low-     troller based systems are prevalent. The D20-ROV
+cost educational platforms like the ArduinoSub          and ArduinoSub, for instance, use an Arduino
+and the vehicle proposed by the authors of [34],        Mega 2560 as the central brain, which is sufficient
+PVC and acrylic are common choices due to               for basic manual control and sensor interfacing
+their affordability and ease of fabrication. For        [5], [9]. For more advanced capabilities, single-
+more robust applications, designs progress towards      board computers like the Raspberry Pi are fre-
+aluminium frames and hulls [30], [31], with high-       quently adopted, as seen in the BlueRov2 and
+performance vehicles intended for deep-sea oper-        PolROV designs, providing a Linux-based envi-
+ation employing materials like carbon fibre and         ronment capable of handling networking, video
+syntactic foam to achieve high strength-to-weight       streaming, and more complex algorithms [8], [10].
+ratios [35]. Waterproofing remains a critical and       High-performance vehicles designed for signifi-
+persistent challenge. Standard solutions include O-     cant autonomy, such as EVA and Mesobot, employ
+ring seals for static enclosures and potted cable       multi-computer architectures with powerful CPUs
+penetrators [6]. However, the literature presents       and dedicated GPUs (e.g., Nvidia Jetson TX2) to
+several innovative approaches to overcome the           process large volumes of sensor data in real-time
+limitations of these methods. The Jeff AUV uses a       [11], [12].
+novel non-penetrative magnetic coupling to trans-          5) Software and Communication Frameworks:
+mit torque from internal motors to external pro-        The software stack and communication architec-
+pellers, completely eliminating the need for a dy-      ture are integral to the ROV’s functionality. For
+namic shaft seal [36]. The design by the authors of     complex, modular systems, ROS is the framework
+[37] also highlights custom-developed connectors        of choice, as seen in the Autonomous ROV for
+as a significant improvement over permanently           Marine Growth and the EVA hybrid vehicle [7],
+potting electronics, allowing for easier mainte-        [11]. ROS is valued for its extensive libraries,
+nance and repair. For the QUT demonstration             hardware drivers, and robust inter-process commu-
+ROV, waterproofing will be a key challenge due          nication, which significantly accelerates develop-
+to its small form factor.                               ment time. On simpler platforms, custom firmware
+   4) Hardware Selections:                              is often developed in C++ within the Arduino IDE
+      a) Propulsion and Sensing.: The choice of         or using Python on a Raspberry Pi [1]. Open-
+thrusters and sensors is dictated by the vehicle’s      source firmware like ArduSub, used in the VITA1
+mission profile and budget. Propulsion systems          prototype, provides a powerful and well-supported
+range from modified low-cost (˜$50) bilge pumps         alternative to developing a control system from
+in budget designs [38] to commercially available,       scratch [13]. Communication is almost universally
+high-performance brushless DC thrusters like the        handled via a physical tether for ROVs, which
+BlueRobotics T200 (˜$350 per unit), which are           provides both power and a high-bandwidth data
+noted for their power and reliability [2], [8].         link. This link is typically Ethernet over twisted
+Sensor suites vary significantly; educational kits      pairs, though high-end systems may use fibre
+may only include a basic IMU and a camera [1],          optics for greater bandwidth and distance [35].
+                                                                                                    23
+
+
+
+   6) Control System Architectures: Control             B. Appendix B: Comprehensive Bill of Materials
+strategies for underwater vehicles have matured         (BOM) & Full Budget
+from direct teleoperation to sophisticated
+autonomous behaviours [5]. The foundational
+control method discussed in much of the literature
+is the PID controller, used for fundamental tasks
+like depth-hold and heading-hold in vehicles such
+as the PolROV and Ariana-I [6], [10]. These
+controllers are well-understood and relatively
+simple to implement. However, due to the highly
+non-linear dynamics of underwater vehicles,
+more advanced techniques are often required for
+robust performance, especially in the presence of
+external disturbances like currents [5]. To address
+this, some designs implement Sliding Mode
+Control (SMC) for its robustness to parameter
+uncertainties [5], or Fuzzy Logic controllers
+which do not require a precise mathematical
+model of the system [14]. The Kambara AUV
+represents the cutting edge, employing model-free
+reinforcement learning to allow the controller to
+learn the vehicle’s dynamics through trial and
+error, avoiding the need for an explicit model
+altogether [39].
+
+   7) System Modelling Approaches: The devel-
+opment of a control system is often preceded
+by system modelling to simulate and predict the
+vehicle’s behavior. A key distinction in the liter-
+ature is the approach taken to derive this model.
+Many research-grade projects, such as the eROV
+and the spherical AUV by the authors of [40],
+develop a comprehensive 6-DOF dynamic model
+from first principles. This process involves using
+CAD software to determine rigid-body parameters
+(mass, inertia) and CFD simulations to estimate
+hydrodynamic coefficients (drag, added mass) [2],
+[8]. This model-based design allows for extensive
+simulation and controller tuning before physical
+construction. An alternative, empirical approach
+is system identification, where experimental data
+from a physical prototype is used to derive a trans-
+fer function model. This was successfully demon-
+strated by the authors of [41] for the UTERG-
+ROV2, providing an accurate model for depth
+control without complex theoretical analysis. The
+choice of modelling approach represents a trade-
+off between theoretical rigour and the practicalities
+of physical testing.
+                                                                                                                                          24
+
+
+
+
+                                                       TABLE II
+                         S UBBY ROV C OMPREHENSIVE B ILL OF M ATERIALS (BOM) AND F ULL B UDGET
+
+Sub-System / Part Name                Manufacturer         Part Number      Qty   Unit Cost ($AUD)   Total Cost ($AUD)   Onboard Wt est (g)
+1. Propulsion
+APISQUEEN U2 MINI 1.3Kg Thruster      underwaterthruster   U2 mini            4        63.65              254.60                       840
+2. Electronics
+Pixhawk 6X + Mini Baseboard + PM02    Dr.Uav / HolyBro     6X-ICM-45686-5     1        300.00             300.00                         50
+Matek Systems PDB XT60 W/ BEC         dronesxpress         PDB-XT60           1        36.00               36.00                        7.5
+Fathom-X Tether Interface Board       Blue Robotics        BR-100178          2        212.15             424.30                        100
+Tattu 2200mAh 4s 45c Lipo Battery     NextFPV              TA52004S35         2         42.95              85.90                        190
+Durakool Automotive Relay SPDT 90A    Rs                   915-6644           1          7.99               7.99                         14
+Switch                                Blue robotics        BR-100433          1         42.43              33.94                       20.5
+XF-Z-1MINI                            UmmanedRC            -                  1        363.98             363.98                         69
+Ethernet Module M80                   Auvidea              38658-RT           1         46.69              46.69                       4.89
+Assorted connections + Wires          Misc                 -                  0          0.00              30.00                          0
+Small 12V BEC                         Cheapest             -                  1        20.00               20.00                          0
+4. Frame & Enclosure
+Fathom ROV Tether                     Blue Robotics        BR-100985-050      1        379.29             303.43                         0
+Watertight Enclosure 3 inch 240 set   Blue Robotics        WTE-VP             1        521.96             417.57                         0
+   Flange                             Blue Robotics        -                  2          0.00               0.00                        87
+   Enclosure                          Blue Robotics        -                  1          0.00               0.00                       442
+   Dome                               Blue Robotics        -                  1          0.00               0.00                        39
+   Plate                              Blue Robotics        -                  1          0.00               0.00                        93
+150mm Item Profile                    Item                 -                  4         21.60              22.96                       288
+Item end caps                         Item                 -                 10          0.95              9.50                          0
+T nuts Item                           Item                 -                 20          3.65              73.00                        40
+Penetrators 7.5 HC(7.0+0.3mm)         Blue Robotics        BR-100870-175      4         19.74              63.17                        87
+Clamps                                Blue Robotics        -                  2         66.83             106.93                       644
+5. Buoyancy
+15mm EVA Foam Sheet, 1 x 1 Metre      Titan AV             -                  1        22.00               22.00                      122.4
+6. Fasteners
+M3                                    -                    -                 10         0.00               0.00                          0
+M4                                    -                    -                 20         0.00               0.00                          0
+7. Payload
+Lumen Subsea Light                    Blue Robotics        BR-100857          1        265.52             212.42                       118
+8. 3D Printed
+PLA filament                          Anywhere             -                  1        50.00               50.00                         0
+   Internal Mounts A and B            Custom               -                  2         0.00                0.00                        72
+   Switch Mount                       Custom               -                  1         0.00                0.00                        13
+   PDB Mount                          Custom               -                  1         0.00                0.00                        13
+   Camera Mount                       Custom               -                  1         0.00                0.00                        21
+   Side Item Mount                    Custom               -                  4         0.00                0.00                        40
+   Thruster Mount A                   Custom               -                  2         0.00                0.00                        22
+   Thruster Mount B                   Custom               -                  2         0.00                0.00                        20
+   Handle                             -                    -                  1         0.00                0.00                       400
+   Light Mount                        -                    -                  1         0.00                0.00                        13
+                                                                                         TOTALS:         $2,884.38               3,209.29 g
+GANTT CHART
+                                          PROJECT TITLE                  COMPANY NAME QUT
+                      C. Appendix
+                             PROJECTC: Project Timelines
+                                     MANAGER                                      DATE 16/10/2025
+
+                                                                             Sem 2 2025                                      Break                                        Sem 1 2026
+        #                          Task                   W1 W2 W3 W4 W5 W6 W7 W8 W9 W10W11W12 W13W14W15 W1 W2 W3 W4 W5 W6 W7 W8 W9 W10W11W12 W13W14W15 W1 W2 W3 W4 W5 W6 W7 W8 W9 W10W11W12 W13W14W15
+1           Phase 1
+1.1         Research Papers and Articles
+1.1.1       Research componets and compatibility
+1.2         Research componets avaliability
+1.3         write project proposal
+1.4         Search for component models
+1.5         Create inital design
+1.6         Refine Inital design
+1.7         write progress report
+2           Phase 2
+2.1         Export Design to urdf
+2.2         Simulate Buoyancy and control
+2.3         Refine and improve design
+2.4         Construct prototype
+2.5         Document Progress
+3           Phase 3
+3.1         Inital tests on prototype
+3.2         Manual Input testing
+3.2.1       Program and Design Control Setup
+3.2.2       Add Autonomous pathing
+3.3         Document Progress
+3.3.1       Report findings and present
+
+
+
+
+                                                                                                                                                                                                         25
+REVISED GANTT CHART
+                              Project Name: SubbyROV                      COMPANY NAME QUT
+                               Supervior: Tobias Fischer                           DATE 16/2/2026
+
+                                                                              Sem 2 2025                                      Break                                        Sem 1 2026
+        #                          Task                    W1 W2 W3 W4 W5 W6 W7 W8 W9 W10W11W12 W13W14W15 W1 W2 W3 W4 W5 W6 W7 W8 W9 W10W11W12 W13W14W15 W1 W2 W3 W4 W5 W6 W7 W8 W9 W10W11W12 W13W14W15
+1           Phase 1
+1.1         Research Papers and Articles
+1.1.1       Research componets and compatibility
+1.2         Research componets avaliability
+1.3         write project proposal
+1.4         Search for component models
+1.5         Create inital design
+1.6         Refine Inital design
+1.7         write progress report
+2           Phase 2
+2.1         Define key Internal issues
+2.2         Research and Design Workarounds
+2.3         Refine and improve design
+2.4         Construct prototype
+2.5         Send design for simulation
+3           Phase 3
+3.1         Review simulated outputs
+3.2         Refine Design Iteratively
+3.2.1       Manual Test in pool
+3.2.1       Program and Design Control Setup
+3.2.2       Add Autonomous pathing
+3.3         Document Progress
+3.3.1       Report findings and present
+
+
+
+
+                                                                                                                                                                                               26
+     6                        5                               4                                               3                                            2                                          1
+           D. Appendix D: CAD Models                                                         194.30
+
+
+D                                                                                            188.00
+                                                                                                                                                                                                               D
+                                                            19.76                65.59                            72.60
+                                       25.00
+                                                          16.65
+                                                                                                                                                  33.37
+                                                                                                                                   18.00
+
+
+
+                     75.72
+                       7.10   59.00                                                                                                                                       41.03
+C                                                                                                                                                                                                              C
+                                                                                                                                                   12.91
+                                                                                                   75.00                           25.20
+                                                    50.35                                                                 23.00
+                                                                                                                                         5.60
+                                                                        27.00
+                                                                                                                  32.00
+    R39.                                       27.50
+           47
+B                                                 R35.95
+                                                                                                                                                                                                               B
+         25
+                                                 UNLESS OTHERWISE SPECIFIED:      FINISH:                                  DEBURR AND
+
+    R44.
+                                                                                                                                                          DO NOT SCALE DRAWING             REVISION
+                                                 DIMENSIONS ARE IN MILLIMETERS                                             BREAK SHARP
+                                                 SURFACE FINISH:                                                           EDGES
+                                                 TOLERANCES:
+                                                   LINEAR:
+                                                   ANGULAR:
+                                                                                                                                                     Joshua Hecke
+                                                              NAME           SIGNATURE      DATE                                         TITLE:
+
+                                                 DRAWN
+
+                                                 CHK'D
+                                                                                                                                                  Water Tight Enclosure Design
+                                                 APPV'D
+
+                                                 MFG
+
+
+A                                                                                                   MATERIAL:                            DWG NO.
+                                                                                                                                                                                                               A
+                                                                                                                                                                     WTE
+                                                 Q.A
+                                                                                                                                                                                                          A4
+                                                                                                                                                                                                                   27
+                                                                                                    WEIGHT:                              SCALE:1:2                                SHEET 1 OF 1
+
+
+
+     6                        5                               4                                               3                                            2                                          1
+                6                5                4                                             3                                 2                                         1
+                        308.90
+                                                                                                                     362.26
+
+D                                                                                                                                                                                    D
+
+       232.88                                                88.90
+
+
+                71.49                                                                               55.00
+
+
+C                                                                                                                                               17.97
+                                                                                                                                                                                     C
+                        258.20
+                                                                                                                                                                  7
+                                                                                                                                                               2.9
+                                                                               A
+                                                                                                                                                                       8
+                                                                                                                                                               18 .3
+
+                                                                                                                                  DETAIL A
+B                                                                                                                                    SCALE 2 : 5
+                                                                                                                                                                                     B
+    181.36                           UNLESS OTHERWISE SPECIFIED:
+                                     DIMENSIONS ARE IN MILLIMETERS
+                                                                     FINISH:                           DEBURR AND
+                                                                                                       BREAK SHARP
+                                                                                                                                 DO NOT SCALE DRAWING            REVISION
+                                     SURFACE FINISH:                                                   EDGES
+
+                                                                                                                                   Joshua Hecke
+                                     TOLERANCES:
+                                       LINEAR:
+                                       ANGULAR:
+
+                                                  NAME           SIGNATURE     DATE                                  TITLE:
+
+                                     DRAWN
+
+                                     CHK'D                                                                                       Full Assembly
+                                     APPV'D                                                                                                                             28
+                                     MFG
+
+
+A                                                                                     MATERIAL:                      DWG NO.
+                                                                                                                                                                                     A
+                                                                                                                                   Assembly
+                                     Q.A
+                                                                                                                                                                                A4
+
+                                                                                      WEIGHT:                        SCALE:1:5                          SHEET 1 OF 1
+
+
+
+                6                5                4                                             3                                 2                                         1
+E. Appendix E: Risk Assessment
+
+
+
+
+                                 29
+                                                     Risk Assessment : 18339 (Pending Endorsement)
+Customer Details:-
+            Owner:         Josh Hecke (joshua.hecke@connect.qut.edu.au)                                Review: Yes
+              Email:       joshua.hecke@connect.qut.edu.au                                      Endorsement: Yes
+
+  Assessment Type: Plant/Equipment                                                                   MAPS ID:
+   Division/Faculty: Faculty of Engineering                                                        QUT Team: School of Electrical Engineering & Robotics
+
+    School/Depart: School of Electrical Engineering & Robotics                                 QUT SubTeam:
+         Start Date: 8/25/2025                                                                   Est End Date: 6/25/2026
+
+                Title: Design of small scale Remotely Operated Vehicle - Underwater Robot
+         Description: This is an risk assessment to support the design of a new small scale ROV on campus.
+
+                           The primary risks relate to electrical safety during development, manual handling, operation, electrical safety including charging and packing and storage for travel.
+
+                           Only Tobias Fischer, Joshua Hecke and Scarlet Raine will be able to operate this device during development and testing, due to its experimental nature. Other team members can operate this vehicle after
+                           contacting said operators and receiving a induction.
+
+                           Main Risks-
+                           *5200mAh 14v LIPO Battery Use and Handling*
+                           *Operation and Handling around water*
+                           IF USED
+                           *Safe use and Storage of Dichtol Waterproofing*
+                           Ensure-
+                           S9 lab techs are aware of LIPO presence if battery is on campus for safe storage and charging.
+
+                           In addition to this risk assessment, Approval of any commercial areas(i.e qut pool) needs to be organized with the appropriate body accordingly.
+
+Location Details:-
+
+            Campus                                        Building                             Floor                   Room                                                           Addional Info
+
+
+           Off Campus                                                                                                                  These are operated on-water in the field at approved locations(A key example would be QUT Pool or
+                                                                                                                                       Personal Pool)
+          Gardens Point                                      S Block                          Level 11          1145-Post-Graduate     Mobile Robots Lab Soldering Station
+                                                                                                                       Lab.
+
+Hazard Details:-
+
+ Haz      Hazard                         Cause of Harm                                   What could go wrong                                                                                L             C               Risk          Hide
+  ID                                                                                                                                                                                                                     Score         Items
+ 79996    Slip-Trip-Fall                 Slippery surfaces                               Slipping getting in and out of boat, on boat ramps or on shore close to water.                  Possible       Minor             Low
+
+                                         Control                                         Hierachy: Administration
+                                                                                         Control: Assess conditions before moving around location. Must wear suitable footwear
+                                                                                         according to location (e.g. shoes, or wet booties). Only hop onto boat once fully secured.
+                                                                                         Do not run. Use multiple people to carry equipment on shore or loading boat.
+ 79997    Plant and Equipment            Operation                                       Rotating propellers - cuts, injuries, equipment in motion.                                      Unlikely       Minor             Low
+
+                                         Control                                         Hierachy: Engineering
+                                                                                         Control: For the BlueRov, the remote operator interface controls the motors and
+                                                                                         touching any control will disable the system and put it into idle mode.
+                                         Control                                         Hierachy: Isolation
+                                                                                         Control: On the BlueRov, the motors have shrouds minimizing the possibility of
+                                                                                         accidental contact with the propellers.
+                                                                                                                                                                                                                                               30
+79998   Manual Tasks   Posture - sustained/awkward/static             During deployment on shore/surface:                                                          Unlikely   Moderate   Medium
+                                                                      - awkward posture (kneeling, squatting, balancing etc)
+                                                                      - bending/twisting
+                                                                      - duration of work
+                                                                      - load handling
+                                                                      - long standing/sitting
+                                                                      - muscular force exerted
+                                                                      - repetitive movement
+                       Control                                        Hierachy: Other
+                                                                      Control: Take regular breaks,
+                                                                      Keep area tidy,
+                                                                      Position body (and maneuver boat) to life appropriately
+                                                                      Use the handles on the equipment
+79999   Electrical     <50 volts AC/<120 volts DC                     Fire or damage to batteries due to charging or discharging                                   Possible    Minor       Low
+
+                       Control                                        Hierachy: Administration
+                                                                      Control: After being approved/checked by lab tech, operators can now keep batteries on
+                                                                      their person and conduct charging in designated charging areas in s11.
+                       Control                                        Hierachy: Administration
+                                                                      Control: Follow the operating manual for the chargers and ASVs
+                       Control                                        Hierachy: Engineering
+                                                                      Control: Only use official supplier and tagged chargers.
+                       Control                                        Hierachy: PPE
+                                                                      Control: Ensure batteries are charged and transported in lipo safe bags
+                       Control                                        Hierachy: PPE
+                                                                      Control: Fire extinguisher and/or fire blanket at working site.
+80000   Other          General assembly, building and installation of - injury due to misuse of tools                                                              Possible    Minor       Low
+                       sensors and payloads.                          - pinch points
+                       Control                                        Hierachy: Administration
+                                                                      Control: Standard operating procedures
+                                                                      General assembly of the main hull and location of pinch points are clearly marked. An
+                                                                      online SOP for the ASVs is maintained (QUT wiki). Each participant is aware and has
+                                                                      access to these manuals and the latest is attached to this risk assessment.
+                       Control                                        Hierachy: Administration
+                                                                      Control: Training and education
+                                                                      Ensure each participant is appropriately trained for the tools and equipment they are
+                                                                      using and if required inducted into the work-zone.
+80001   Fieldwork      Other                                          Public hazards                                                                                Rare       Minor     Negligible
+                                                                      Unauthorized persons approach the vessel during operation such as swimmers or
+                                                                      canoes.
+                                                                      - knocking someone into the water
+                                                                      - collision with a swimmer
+                                                                      - collision with another vessel
+                                                                      - public interfering with the vessel
+                       Control                                        Hierachy: Administration
+                                                                      Control: Standard Operating Procedures
+                                                                      Follow the SOP and exception permit requirements for notifying the public and locations
+                                                                      for operation.
+                       Control                                        Hierachy: Engineering
+                                                                      Control: The overall mass is to be kept low so that there is minimal kinetic energy in any
+                                                                      collisiot. Ensure all motors are shrouded and the shrouds are intacts.
+                       Control                                        Hierachy: Isolation
+                                                                      Control: Remote control devices
+                                                                      All vessels have at least one level of wireless estop of wireless e-Stops. For the
+                                                                      BlueRov2, the first is a hardwored heartbeat which
+                                                                      must be maintained from the shore to allow power to the motors. The other is the
+                                                                      remote control unit (e.g., RC controller or tablet) which can manually overide the
+                                                                      computer and when switched off will also trigger the e-Stop.                                                                    31
+80001                  Control                          Hierachy: Isolation
+                                                        Control: The test location will be selected (moved within the site) to areas where there
+                                                        are no public visible or planned to be in the area. Conditions of applicable permits will be
+                                                        followed.
+                                                        If possible, on inland water storages, select sites that have no public access and seek
+                                                        approval from the land owners.
+
+80003   Fieldwork      Other                            Working near water                                                                             Unlikely   Major   Medium
+                                                        - drowning
+                                                        - slipping and falling
+                                                        - cuts from debris in the mud (e.g. broken glass, sharp rocks
+                       Control                          Hierachy: Administration
+                                                        Control: Prepare and train for emergency response Details of the trained first-aiders
+                                                        made aware to the team on arrival at site as well as the location (in-vehicle) of the
+                                                        emergency contacts and closest hospital.
+                       Control                          Hierachy: Administration
+                                                        Control: Standard operating procedures
+                                                        The captain on boarding the boats will advise the team and crew of the standard
+                                                        operating procedures for all aspects of working at sea. This includes location of
+                                                        lifejackets, procedure for man overboard. These procedures are documented on-board
+                                                        the vessels and placards are placed around the vessel. For people that cannot swim or
+                                                        are uncomfortable around the water, they are encouraged to wear life-jackets whenever
+                                                        working near the edge of the boat.
+
+                       Control                          Hierachy: Administration
+                                                        Control: WAM-V SOP - Initially, the boat will be assembled on the waters edge following
+                                                        a visual inspection of the area and assessment of water depth. With a bow rope
+                                                        attached, the boat will be carried until the the stern is in the water (approximately 5
+                                                        inches deep) and then pushed from the bow until completely in the water. Recovery will
+                                                        involve remote controlling the boat to the shore bow first, dragging the boat back onto
+                                                        shore (lifting the bow slightly) until the rear handles are at the shoreline and then lifted
+                                                        onto shore. This means that only shallow water sites are needed
+                       Control                          Hierachy: PPE
+                                                        Control: Each participant will wear enclosed footwear to allow walking at the water edge
+                                                        without risk of cutting feet due to debris and with enough grip to minimise slipping.
+                       Control                          Hierachy: PPE
+                                                        Control: Ensure suitable and fit for purpose life-jackets are available for all personal.
+                                                        These must be worn whilst on the boats when required by the skippers and vessels
+                                                        operating procedures.
+
+80004   Manual Tasks   Setting up equipment/furniture   Strains and sprains. Lifting equipment and transport cases for launching from shore.           Unlikely   Minor    Low
+
+                       Control                          Hierachy: Administration
+                                                        Control: Assess weight and size of load. Use more people to lift if awkward, slippery or
+                                                        unable to lift. Use trolleys on campus.
+                       Control                          Hierachy: Other
+                                                        Control: General assembly of the main hull and location of pinch points are detailed in
+                                                        the manufacturers manual (see attachment). Each participant is aware and has access to
+                                                        this manual.
+80005   Electrical     <50 volts AC/<120 volts DC       General hazard: Working with ultra low voltage DC (5-24Volts) Electrical equipment such        Possible   Minor    Low
+                                                        as electric
+                                                        motors and sensors.
+                                                        - low voltage shock
+                                                        - burns
+                                                        - electrical fires
+                       Control                          Hierachy: Administration
+                                                        Control: Ensure all participants working with low-voltage electrical are trained in the use
+                                                        of the equipment and have the appropriate laboratory inductions if required to undertake
+                                                        the work.
+                                                                                                                                                                                   32
+                       Control                          Hierachy: Administration
+                                                        Control: Follow procedure for installation and removal of batteries. Ensure the equipment
+                                                        is turned off before installation or removal.
+80005                Control                             Hierachy: Administration
+                                                         Control: Keeping equipment and plant well maintained.
+                                                         Use only fit-for purpose equipment.
+                                                         Ensure all wiring is documented and appropriately labelled where necessary.
+                     Control                             Hierachy: Isolation
+                                                         Control: Isolation switches and/or quick release plugs/connectors (such as Anderson or
+                                                         XT connectors) for isolating power to the components being worked on.
+
+                     Control                             Hierachy: Other
+                                                         Control: Fire extinguisher and/or fire blanket at the work site. Also LiPo safe bags for
+                                                         transporting and charging LiPo batteries
+                     Control                             Hierachy: PPE
+                                                         Control: Ensure batteries are charged and transported in lipo safe bags
+80006   Other        Loss of robot during missions       - Losing contact with the robot during missions                                              Unlikely   Minor   Low
+                                                         - Leaking of water into robot
+                     Control                             Hierachy: Administration
+                                                         Control: Standard operating procedures
+                                                         The missions are planned such that the ROV will operate in within a defined range. The
+                                                         ROV are tethered and in loss of power the robot can be located and most likely retrieced
+                                                         using the tether. In the event of leaking of water into the ASV, the robot should have
+                                                         sufficient remaining buoyancy to remain at the surface In the event of a leaking robots,
+                                                         the batteries have been selected to minimize risk of fire or explosion and on recovery the
+                                                         robot will be isolated for up to 3 hours to ensure no fire risk before further handling.
+                     Control                             Hierachy: Administration
+                                                         Control: The Operation of the ROV in navigable waters are covered under the AMSA
+                                                         Specific Exemption permit. This has requirements in the equipment required such as
+                                                         radios for alerting people in the vacinity, markings and the use of a ground control
+                                                         station (tablets and/or computers).
+                     Control                             Hierachy: Other
+                                                         Control: The BlueRov have a hearthbeat sent over the teather. The operational status
+                                                         and approximate possition are always known wihin a few meters.
+80008   Electrical   Operation of electrical equipment   Burn, Shock, Breathing in solder fumes                                                       Possible   Minor   Low
+
+                     Control                             Hierachy: PPE
+                                                         Control: Ensure Glasses and extraction fan are used when soldering.
+                     Control                             Hierachy: PPE
+                                                         Control: When handling parts and chemicals ensure gloves are warn and safety gear
+                                                         including masks are worn.
+80178   Chemicals    Handling and use                    *This chemical may not be used*                                                              Possible   Minor   Low
+                                                         Use of non-hazardous dichtol for waterproofing 3d parts. Standard handling risks include
+                                                         inhalation, skin contact, eye contact
+                     Control                             Hierachy: Administration
+                                                         Control: The chemical will be stored in s9 store when not in use and be lent out when
+                                                         used in s11. To be returned at end of use
+                     Control                             Hierachy: Isolation
+                                                         Control: Remove risk by storing in carefully closed container upright with lid on tight
+
+
+
+
+                                                                                                                                                                               33
+80178                Control                             Hierachy: Other
+                                                         Control: General information
+                                                         In all cases of doubt, or when symptoms persist, seek medical advice. If unconscious but
+                                                         breathing normally, place in recovery
+                                                         position and seek medical advice.
+
+                                                         Following inhalation
+                                                         Remove casualty to fresh air and keep warm and at rest. In case of irregular breathing
+                                                         or respiratory arrest provide artificial
+                                                         respiration.
+
+                                                         Following skin contact
+                                                         Remove contaminated, saturated clothing immediately. After contact with skin, wash
+                                                         immediately with plenty of water and soap.
+                                                         Do not use solvents or thinners. Wash contaminated clothing before reuse.
+
+                                                         After eye contact
+                                                         Rinse cautiously with water for several minutes. Remove contact lenses, if present and
+                                                         easy to do. Continue rinsing. Seek
+                                                         medical advice immediately.
+
+                                                         Following ingestion
+                                                         If swallowed, rinse mouth with water (only if the person is conscious). Seek medical
+                                                         advice immediately. Keep victim calm. Do
+                                                         NOT induce vomiting.
+
+                                                         Self-protection of the first aider
+                                                         First aider: Pay attention to self-protection!
+                                                         Most important symptoms and effects, both acute and delayed
+
+                                                         Symptoms
+                                                         In all cases of doubt, or when symptoms persist, seek medical advice.
+                                                         Indication of any immediate medical attention and special treatment needed
+                                                         First Aid, decontamination, treatment of symptoms.
+                     Control                             Hierachy: PPE
+                                                         Control: gloves, eye protection, respiratory protection
+80320   Electrical   Design/modification                 Water could enter electrical storage containers causing damage and potential shock. This    Possible   Moderate   Medium
+                                                         is due to waterproof seals failing or not being sufficient
+                     Control                             Hierachy: Elimination
+                                                         Control: Try to use certified/standard waterproofed containers (BlueRov product) where
+                                                         possible and only use custom made containers where necessary
+                     Control                             Hierachy: Engineering
+                                                         Control: Ensure all waterproof containers are tested multiple times at the required depth
+                                                         before being used to store components.
+83411   Electrical   Operation of electrical equipment   Lipo Battery 5200mAh 14V                                                                    Possible   Moderate   Medium
+                                                         -Overcharging- can cause damage and fires
+                                                         -Storage- Storing LiPo batteries in inappropriate temperatures or locations can affect
+                                                         their performance and safety
+                                                         -Thermal Runaway-A dangerous process where a battery overheats and cannot cool
+                                                         down, leading to fire, explosion, and toxic fumes
+                                                         -Physical Damage- Punctures, fractures, or tears in the battery casing can lead to
+                                                         internal short circuits, increasing the risk of fire
+                     Control                             Hierachy: Administration
+                                                         Control: Ensure days notice before any use,s9 techs will prepare accordingly.
+                     Control                             Hierachy: Administration
+                                                         Control: For Handling, Lab Techs in s9 control the charging and storage of LIPOs.
+
+                                                         This is non-negotiable as the methods already in place for safe storage, charging and
+                                                         testing.
+                     Control                             Hierachy: Elimination
+                                                                                                                                                                                    34
+                                                         Control: Check resistance between battery input terminals and ensure no shorts or low
+                                                         resistance before use to ensure max output is not placed on system.
+ 83411                             Control                                         Hierachy: Engineering
+                                                                                   Control: Before the battery is in operation ensure use in the system doesn't heat up the
+                                                                                   battery to a safety critical range. This is done through safe testing and calculations to
+                                                                                   ensure constant high draw causes heat
+                                   Control                                         Hierachy: Engineering
+                                                                                   Control: Don’t run the battery down below 20% capacity.
+                                   Control                                         Hierachy: Isolation
+                                                                                   Control: Ensure when the battery is in use and/or exposed that there is a safe
+                                                                                   distance/exclusion zone. Especially for initial testing and research.
+                                   Control                                         Hierachy: Isolation
+                                                                                   Control: The LIPO will remain inside a LIPO Bag during transport at all times. Ensure it is
+                                                                                   collected like this.
+
+Participant Details:-                                                           Reviewer Details:-                                                                                   Approver Details:-
+
+Participant                                                                      Reviewer                                                     Review                                  Approver
+Name                                                                             Name                                                         Status                                  Name
+Scarlett Raine (sg.raine@qut.edu.au)                                             Tobias Fischer (tobias.fischer@qut.edu.au)                   Pending                                 Dhammika Jayalath (dhammika.jayalath@qut.edu.au)
+
+Josh Hecke (joshua.hecke@connect.qut.edu.au)                                     Steven Bulmer (steven.bulmer@qut.edu.au)                     Pending
+
+Tobias Fischer (tobias.fischer@qut.edu.au)
+
+
+Approval Details:-
+
+   ID     Approval                                                    Approver Name                                               Approval Status
+
+
+  21769   Risk Assessment Endorsment required for Risk                Tobias Fischer (tobias.fischer@qut.edu.au)                  Approved
+          Assessment#18339
+  22118   Risk Assessment Approval required for Assessment            Firuz Zare (f.zare@qut.edu.au)                              Cancelled
+          #18339
+  22165   Risk Assessment Endorsment required for Risk                Tobias Fischer (tobias.fischer@qut.edu.au)                  Pending
+          Assessment#18339
+
+Note Details:-
+
+Subject                                                  Note                                                                     Category                           Created Date                       Created By
+
+
+Reviewer Note                                            Hi Josh,                                                                 Customer Notes                                 9/19/2025 10:29:17 AM Tobias Fischer
+                                                                                                                                                                                                       (tobias.fischer@qut.edu.au)
+                                                         Overall well done and comprehensive RA!
+
+                                                         - I've added Scarlett Raine as a participant as she's leading a lot of
+                                                         our marine robotics work, please update description accordingly.
+                                                         - Other team members need to contact operators + get induction
+                                                         - Remove everything boat related from the RA (loss of robot, ...),
+                                                         this is out of scope for this RA. If boat operation will happen in the
+                                                         future, we'll need to submit a separate RA.
+                                                         - Need to add water leakage as hazard + appropriate controls;
+                                                         describe tank etc.
+                                                         - Need to provide detailed information on where chemicals will be
+                                                         stored (Krishna to advise)
+                                                         - Need to provide detailed information on where batteries will be
+                                                         stored (Krishna to advise)
+                                                         - Change "low voltage" to "ultra low voltage" to be consistent with
+                                                         regulation
+
+                                                         Let me know if you have any questions.
+
+                                                         Best, Tobi                                                                                                                                                                      35
+Reviewer Note   Happy to accept this for now but maybe some additions would help Customer Notes   9/19/2025 10:29:17 AM Steven Bulmer
+                further readings.                                                                                       (steven.bulmer@qut.edu.au)
+                Make it clear that the batteries used are not LIPO. I was sent a link
+                to a Li-Ion battery which is a much safer chemistry.
+                I would get Shaun and or S9 involved asap to get him in the loop
+                for chemical purchase and storage. I think ultimately the users will
+                be the ones requesting the chemicals for purchase and then involve
+                S9 for the storage.
+Endorser Note   Hi Josh,                                                        Customer Notes    9/19/2025 10:29:17 AM Tobias Fischer
+                I am happy to endorse this as soon as                                                                   (tobias.fischer@qut.edu.au)
+                1) Scarlett has been added to Project Description, and
+                2) You consider Steve's comments about chemicals/battery
+                descriptions.
+
+
+                Best, Tobi
+
+
+
+
+                                                                                                                                                      36
+

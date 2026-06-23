@@ -1,0 +1,35 @@
+Mass properties of EVAFOAM
+     Configuration: Default
+     Coordinate system: -- default --
+
+The center of mass and the moments of inertia are output in the coordinate system of Assembly
+Density = 0.00 grams per cubic millimeter
+
+Mass = 61.20 grams
+
+Volume = 720000.00 cubic millimeters
+
+Surface area = 58800.00  square millimeters
+
+Center of mass: ( millimeters )
+	X = -30.99
+	Y = -69.36
+	Z = -50.37
+
+Principal axes of inertia and principal moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass.
+	 Ix = ( 1.00, -0.01,  0.00)   	Px = 31110.00
+	 Iy = ( 0.00,  0.57, -0.82)   	Py = 306510.00
+	 Iz = ( 0.00,  0.82,  0.57)   	Pz = 312120.00
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass and aligned with the output coordinate system. (Using positive tensor notation.)
+	Lxx = 31117.22	Lxy = -1420.12	Lxz = -13.31
+	Lyx = -1420.12	Lyy = 310315.97	Lyz = -2617.52
+	Lzx = -13.31	Lzy = -2617.52	Lzz = 308306.81
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the output coordinate system. (Using positive tensor notation.)
+	Ixx = 480771.14	Ixy = 130096.87	Ixz = 95503.04
+	Iyx = 130096.87	Iyy = 524346.76	Iyz = 211180.49
+	Izx = 95503.04	Izy = 211180.49	Izz = 661442.94

@@ -1,0 +1,80 @@
+Mass properties of Assembly
+     Configuration: VolumeBouyancy
+     Coordinate system: -- default --
+
+Mass = 4015.03 grams
+
+Volume = 4741897.54 cubic millimeters
+
+Surface area = 1208562.63  square millimeters
+
+Center of mass: ( millimeters )
+	X = -0.77
+	Y = -0.01
+	Z = 0.02
+
+Principal axes of inertia and principal moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass.
+	 Ix = (-0.09,  1.00, -0.01)   	Px = 27051658.27
+	 Iy = (-1.00, -0.09, -0.03)   	Py = 28815199.11
+	 Iz = (-0.04,  0.01,  1.00)   	Pz = 44474214.11
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass and aligned with the output coordinate system. (Using positive tensor notation.)
+	Lxx = 28820371.93	Lxy = -156480.34	Lxz = 562778.95
+	Lyx = -156480.34	Lyy = 27068167.83	Lyz = -164466.08
+	Lzx = 562778.95	Lzy = -164466.08	Lzz = 44452531.73
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the output coordinate system. (Using positive tensor notation.)
+	Ixx = 28820373.84	Ixy = -156438.81	Ixz = 562725.78
+	Iyx = -156438.81	Iyy = 27070553.35	Iyz = -164467.00
+	Izx = 562725.78	Izy = -164467.00	Izz = 44454916.79
+
+One or more components have overridden mass properties:
+	WTE3-P-RETAINING-RING-R1<1><Default>@Hull_v5<1><Default>
+	flange3-BR-100416_RevC.step<1><Default>@Hull_v5<1><Default>
+	BR-102678-003_RevC.step<1><Default>@Hull_v5<1><Default>
+	BR-102678-003_RevC.step<2><Default>@Hull_v5<1><Default>
+	BR-102678-003_RevC.step<3><Default>@Hull_v5<1><Default>
+	BR-102678-003_RevC.step<4><Default>@Hull_v5<1><Default>
+	ItemBar-150mm<1><Default>@Hull_v5<1><Default>
+	SideItemMount<1><Default>@Hull_v5<1><Default>
+	SideItemMount<2><Default>@Hull_v5<1><Default>
+	SideItemMount<3><Default>@Hull_v5<1><Default>
+	SideItemMount<4><Default>@Hull_v5<1><Default>
+	ItemBar-150mm<2><Default>@Hull_v5<1><Default>
+	ItemBar-150mm<3><Default>@Hull_v5<1><Default>
+	ItemBar-150mm<4><Default>@Hull_v5<1><Default>
+	LUMEN-ASM-R3-PUBLIC.STEP@Hull_v5
+	U2-Thruster@Hull_v5
+	U2-Thruster@Hull_v5
+	U2-Thruster@Hull_v5
+	U2-Thruster@Hull_v5
+	BuoyancyHandle<2><Default>@Hull_v5<1><Default>
+	LightMount<1><Default>@Hull_v5<1><Default>
+	ThrusterMount90<1><Default>@Hull_v5<1><Default>
+	ThrusterMount180<1><Default>@Hull_v5<1><Default>
+	ThrusterMount90<2><Default>@Hull_v5<1><Default>
+	ThrusterMount180<2><Default>@Hull_v5<1><Default>
+	flange3-BR-100416_RevC.step<1><Default>@Wte_v5<1><Default>
+	WTE3-M-END-CAP-7-HOLE-R1<1><Default>@Wte_v5<1><Default>
+	SWITCH-M10-5A-R1-RP.STEP@Wte_v5
+	WLP-M10-7.5MM-PUBLIC<1><Default>@Wte_v5<1><Default>
+	WLP-M10-7.5MM-PUBLIC<2><Default>@Wte_v5<1><Default>
+	WLP-M10-7.5MM-PUBLIC<3><Default>@Wte_v5<1><Default>
+	WLP-M10-7.5MM-PUBLIC<4><Default>@Wte_v5<1><Default>
+	WLP-M10-7.5MM-PUBLIC<5><Default>@Wte_v5<1><Default>
+	WLP-M10-7.5MM-PUBLIC<6><Default>@Wte_v5<1><Default>
+	Pixhawk6xMini@Wte_v5
+	FATHOM-X-ASM-R1<1><Default>@Wte_v5<1><Default>
+	PDB-XT60-Model<1><Default>@Wte_v5<1><Default>
+	Circle-BR-103131-300_RevB<2><Default>@Wte_v5<1><Default>
+	Willow Durakool DG82 Series Automotive Relays<1><Default>@Wte_v5<1><Default>
+	Camera_assembly@Wte_v5
+	InternalMount<1><Default>@Wte_v5<1><Default>
+	TATTU 2200mAh 14.8V 45C 4S1P Lipo Battery Pack with XT60 Plug<1><Default>@Wte_v5<1><Default>
+	eth-38658-2.1@Wte_v5
+	PowerMount2<1><Default>@Wte_v5<1><Default>
+	PowerMount3<1><Default>@Wte_v5<1><Default>
+	TubeHollowSpace<1><Default>

@@ -1,0 +1,32 @@
+Mass properties of U2-Thruster
+     Configuration: Default
+     Coordinate system: -- default --
+
+Mass (user-overridden) = 210.00 grams
+
+Volume = 81408.69 cubic millimeters
+
+Surface area = 32581.05  square millimeters
+
+Center of mass: ( millimeters )
+	X = 2.01
+	Y = -144.98
+	Z = 9.05
+
+Principal axes of inertia and principal moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass.
+	 Ix = ( 0.00,  0.00,  1.00)   	Px = 89655.07
+	 Iy = ( 0.00, -1.00,  0.00)   	Py = 118570.80
+	 Iz = ( 1.00,  0.00,  0.00)   	Pz = 124813.85
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the center of mass and aligned with the output coordinate system. (Using positive tensor notation.)
+	Lxx = 124813.85	Lxy = -0.11	Lxz = -0.29
+	Lyx = -0.11	Lyy = 118570.32	Lyz = -117.38
+	Lzx = -0.29	Lzy = -117.38	Lzz = 89655.55
+
+Moments of inertia: ( grams *  square millimeters )
+Taken at the output coordinate system. (Using positive tensor notation.)
+	Ixx = 4555921.17	Ixy = -61256.45	Ixz = 3825.15
+	Iyx = -61256.45	Iyy = 136634.48	Iyz = -275763.76
+	Izx = 3825.15	Izy = -275763.76	Izz = 4504398.95

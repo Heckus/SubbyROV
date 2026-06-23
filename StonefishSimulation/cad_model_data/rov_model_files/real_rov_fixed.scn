@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<scenario>
+    <environment>
+        <ned latitude="0.0" longitude="0.0"/>
+        <ocean>
+            <water density="1025.0" jerlov="I"/>
+            <waves height="0.0"/>
+        </ocean>
+        <atmosphere>
+            <sun azimuth="20.0" elevation="50.0"/>
+        </atmosphere>
+    </environment>
+
+    <materials>
+        <material name="Neutral" density="1000.0" restitution="0.5"/>
+        <material name="ROV_Material" density="500.0" restitution="0.2"/>
+        <material name="EVA_Foam" density="85.0" restitution="0.1"/>
+        <friction_table>
+            <friction material1="Neutral" material2="Neutral" static="0.5" dynamic="0.2"/>
+            <friction material1="ROV_Material" material2="Neutral" static="0.4" dynamic="0.2"/>
+            <friction material1="EVA_Foam" material2="Neutral" static="0.3" dynamic="0.1"/>
+        </friction_table>
+    </materials>
+
+    <looks>
+        <look name="Hull_Look" gray="0.6" roughness="0.4"/>
+        <look name="Thruster_Look" gray="0.1" roughness="0.6"/>
+        <look name="Camera_Look" gray="0.2" roughness="0.5"/>
+        <look name="Foam_Look" gray="0.9" roughness="0.8"/>
+    </looks>
+
+    <robot name="rov" fixed="false" self_collisions="false">
+        <base_link name="base_link" type="compound" physics="submerged">
+            <external_part name="hull_visual" type="model" physics="submerged" buoyant="true">
+                <physical>
+                    <mesh filename="/mnt/data/hull_sub.obj" scale="0.001"/>
+                    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                </physical>
+                <visual>
+                    <mesh filename="/mnt/data/hull_sub.obj" scale="0.001"/>
+                    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                </visual>
+                <material name="ROV_Material"/>
+                <look name="Hull_Look"/>
+                <compound_transform xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            </external_part>
+
+            <internal_part name="foam_left" type="model" physics="submerged" buoyant="true">
+                <physical>
+                    <mesh filename="/mnt/data/Buoyancy_handle.obj" scale="0.001"/>
+                    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                </physical>
+                <visual>
+                    <mesh filename="/mnt/data/Buoyancy_handle.obj" scale="0.001"/>
+                    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                </visual>
+                <material name="EVA_Foam"/>
+                <look name="Foam_Look"/>
+                <compound_transform xyz="-0.00214 -0.06936 -0.05827" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <internal_part name="foam_right" type="model" physics="submerged" buoyant="true">
+                <physical>
+                    <mesh filename="/mnt/data/Buoyancy_handle.obj" scale="0.001"/>
+                    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 3.14159265359"/>
+                </physical>
+                <visual>
+                    <mesh filename="/mnt/data/Buoyancy_handle.obj" scale="0.001"/>
+                    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 3.14159265359"/>
+                </visual>
+                <material name="EVA_Foam"/>
+                <look name="Foam_Look"/>
+                <compound_transform xyz="-0.00143 0.07142 -0.05827" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <mass value="4.08876"/>
+            <cg xyz="-0.00033 0.00015 -0.00790" rpy="0.0 0.0 0.0"/>
+            <hydrodynamics viscous_drag="10.0 20.0 30.0" quadratic_drag="5.0 10.0 15.0"/>
+        </base_link>
+
+        <actuator name="thruster9" type="thruster">
+            <specs max_setpoint="3000.0" inverted_setpoint="false" normalized_setpoint="true"/>
+            <propeller diameter="0.076" right="true">
+                <mesh filename="/mnt/data/Thruster.obj" scale="0.001"/>
+                <material name="Neutral"/>
+                <look name="Thruster_Look"/>
+            </propeller>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="quadratic">
+                <thrust_coeff value="0.0095"/>
+            </thrust_model>
+            <origin xyz="0.01293 -0.14482 0.00116" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+        </actuator>
+
+        <actuator name="thruster10" type="thruster">
+            <specs max_setpoint="3000.0" inverted_setpoint="false" normalized_setpoint="true"/>
+            <propeller diameter="0.076" right="true">
+                <mesh filename="/mnt/data/Thruster.obj" scale="0.001"/>
+                <material name="Neutral"/>
+                <look name="Thruster_Look"/>
+            </propeller>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="quadratic">
+                <thrust_coeff value="0.0095"/>
+            </thrust_model>
+            <origin xyz="-0.08901 -0.13982 -0.00139" rpy="0.0 1.57079632679 0.0"/>
+            <link name="base_link"/>
+        </actuator>
+
+        <actuator name="thruster11" type="thruster">
+            <specs max_setpoint="3000.0" inverted_setpoint="false" normalized_setpoint="true"/>
+            <propeller diameter="0.076" right="true">
+                <mesh filename="/mnt/data/Thruster.obj" scale="0.001"/>
+                <material name="Neutral"/>
+                <look name="Thruster_Look"/>
+            </propeller>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="quadratic">
+                <thrust_coeff value="0.0095"/>
+            </thrust_model>
+            <origin xyz="-0.08845 0.14147 -0.00019" rpy="0.0 1.57079632679 0.0"/>
+            <link name="base_link"/>
+        </actuator>
+
+        <actuator name="thruster12" type="thruster">
+            <specs max_setpoint="3000.0" inverted_setpoint="false" normalized_setpoint="true"/>
+            <propeller diameter="0.076" right="true">
+                <mesh filename="/mnt/data/Thruster.obj" scale="0.001"/>
+                <material name="Neutral"/>
+                <look name="Thruster_Look"/>
+            </propeller>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="quadratic">
+                <thrust_coeff value="0.0095"/>
+            </thrust_model>
+            <origin xyz="0.01349 0.14647 0.00136" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+        </actuator>
+
+        <sensor name="imu" type="imu" rate="100.0">
+            <range angular_velocity="10.0 10.0 10.0" linear_acceleration="20.0"/>
+            <noise angle="0.01 0.01 0.02" angular_velocity="0.001" yaw_drift="0.0001" linear_acceleration="0.01"/>
+            <history samples="1"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+            <ros_publisher topic="/rov/imu"/>
+        </sensor>
+
+        <sensor name="pressure" type="pressure" rate="10.0">
+            <range pressure="1000000.0"/>
+            <noise pressure="0.5"/>
+            <history samples="1"/>
+            <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+            <ros_publisher topic="/rov/pressure"/>
+        </sensor>
+
+        <sensor name="dvl" type="dvl" rate="10.0">
+            <specs beam_angle="30.0" beam_positive_z="false"/>
+            <range velocity="9.0 9.0 9.0" altitude_min="0.5" altitude_max="200.0"/>
+            <water_layer minimum_layer_size="10.0" boundary_near="10.0" boundary_far="30.0"/>
+            <noise velocity_percent="0.3" velocity="0.01" altitude="0.001" water_velocity_percent="0.1" water_velocity="0.1"/>
+            <history samples="1"/>
+            <origin xyz="0.0 0.0 0.05" rpy="0.0 3.14159265359 0.0"/>
+            <link name="base_link"/>
+            <ros_publisher topic="/rov/dvl"/>
+        </sensor>
+
+        <sensor name="camera" type="camera" rate="30.0">
+            <specs resolution_x="1920" resolution_y="1080" horizontal_fov="90.0"/>
+            <history samples="1"/>
+            <origin xyz="0.15 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+            <visual filename="/mnt/data/camera.obj" scale="0.001" look="Camera_Look"/>
+            <ros_publisher topic="/rov/camera"/>
+        </sensor>
+
+        <ros_subscriber thrusters="/rov/thruster_setpoints"/>
+        <ros_publisher thrusters="/rov/thruster_state"/>
+
+        <world_transform xyz="0.0 0.0 -2.0" rpy="0.0 0.0 0.0"/>
+    </robot>
+</scenario>

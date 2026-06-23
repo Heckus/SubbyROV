@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<scenario>
+    <environment>
+        <ned latitude="-27.47" longitude="153.03"/>
+
+        <ocean>
+            <water density="1031.0" jerlov="0.15" temperature="20.0"/>
+            <waves height="0.0"/>
+            <particles enabled="false"/>
+
+            <current type="uniform">
+                <velocity xyz="0.0 0.0 0.0"/>
+            </current>
+        </ocean>
+
+        <atmosphere>
+            <sun azimuth="45.0" elevation="70.0"/>
+        </atmosphere>
+    </environment>
+
+    <materials>
+        <material name="ROVMat" density="1000.0" restitution="0.1"/>
+        <material name="Rock" density="3000.0" restitution="0.8"/>
+
+        <friction_table>
+            <friction material1="ROVMat" material2="ROVMat" static="0.5" dynamic="0.2"/>
+            <friction material1="ROVMat" material2="Rock" static="0.2" dynamic="0.1"/>
+            <friction material1="Rock" material2="Rock" static="0.9" dynamic="0.7"/>
+        </friction_table>
+    </materials>
+
+    <looks>
+        <look name="ROVLook" rgb="0.30 0.30 0.35" roughness="0.5"/>
+        <look name="SeabedLook"
+              gray="1.0"
+              roughness="0.7"
+              metalness="0.3"
+              texture="cad_model_data/ocean_test_data/SoilBeach0078_1_350.jpg"/>
+    </looks>
+
+    <static name="Seabed" type="model">
+        <physical>
+            <mesh filename="cad_model_data/ocean_test_data/flat.obj" scale="1.0"/>
+            <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        </physical>
+        <material name="Rock"/>
+        <look name="SeabedLook"/>
+        <world_transform rpy="0.0 0.0 0.0" xyz="0.0 0.0 6.0"/>
+    </static>
+
+    <include file="$(find stonefish_qut_rov)/scenarios/qut_rov_only.scn">
+        <arg name="vehicle_name" value="qut_rov"/>
+        <arg name="position" value="0 0 1"/>
+        <arg name="orientation" value="0 0 0"/>
+    </include>
+</scenario>

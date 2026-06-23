@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<scenario>
+
+    <looks>
+        <!-- QUT ROV looks -->
+        <look name="rov_body" gray="0.55" roughness="0.45" metalness="0.25"/>
+        <look name="foam" rgb="0.15 0.15 0.15" roughness="0.80"/>
+        <look name="thruster" rgb="0.05 0.05 0.05" roughness="0.50"/>
+        <look name="camera" rgb="0.10 0.10 0.10" roughness="0.40"/>
+    </looks>
+
+    <robot name="$(arg vehicle_name)" fixed="false" self_collisions="false">
+
+        <!-- <base_link name="base_link" type="compound" physics="submerged"> -->
+        <base_link name="base_link" type="model" physics="submerged">
+            <!-- <external_part name="Hull" type="model" physics="submerged" buoyant="true"> -->
+                <!-- <compound_transform xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/> -->
+                <physical>
+                    <mesh filename="cad_model_data/rov_models/2k_N_hole.obj" scale="1.0"/>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                    <inertia 
+                        ixx="0.02894771" 
+                        iyy="0.02757915" 
+                        izz="0.04496371"/>
+                </physical>
+                
+                <visual>
+                    <mesh filename="cad_model_data/rov_models/25k_N_hole.obj" scale="1.0"/>
+                    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                </visual>
+                
+                <material name="HullMat"/>
+                <look name="rov_body"/>
+                
+                <!-- <mass value="4.088"/> -->
+                <mass value="4.088"/> <!-- small mass for fast floatation to see pitching -->
+
+                <!-- <inertia 
+                    ixx="0.02894771" 
+                    iyy="0.02757915" 
+                    izz="0.04496371"/> -->
+                
+                <!-- <hydrodynamics>
+                    <damping xyz="40.0 60.0 80.0" rpy="20.0 20.0 20.0"/>
+                    <added_mass xyz="4.0 6.0 8.0" rpy="0.3 0.3 0.3"/>
+                </hydrodynamics> -->
+                
+            <!-- </external_part>  -->
+
+        </base_link>
+        
+        <!-- Thruster TL -->
+
+        <actuator name="TL" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="0.00201 -0.14498 0.00905" rpy="0 -1.5708 0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="false">
+                <mesh filename="cad_model_data/ccw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+
+        <!-- Thruster TR -->
+
+        <actuator name="TR" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="0.00257 0.14631 0.00925" rpy="0 -1.5708 0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="true" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="true">
+                <mesh filename="cad_model_data/cw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+
+        <!-- Thruster BL -->
+
+        <actuator name="BL" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="-0.08625 -0.13998 0.00651" rpy="0.0 0.0 0.0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="true">
+                <mesh filename="cad_model_data/cw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+
+        <!-- Thruster BR -->
+
+        <actuator name="BR" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="-0.08569 0.14131 0.00771" rpy="0.0 0.0 0.0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="true" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="false">
+                <mesh filename="cad_model_data/ccw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+
+
+
+
+        <!-- COMMENTING OUT SENSORS FOR THE TIME BEING -->
+<!-- 
+        <sensor name="camera" type="camera" rate="30">
+            <specs resolution_x="640" resolution_y="480" horizontal_fov="75.0"/>
+            <origin xyz="0.14816 -0.00046 -0.00106" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+            <ros_publisher topic="/$(arg vehicle_name)/left"/>
+        </sensor> 
+
+        <sensor name="imu" type="imu" rate="50">
+            <link name="base_link"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </sensor> 
+
+		<sensor name="pressure" type="pressure" rate="5.0">
+			<link name="base_link"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+			<noise pressure="5.0"/>
+			<ros_publisher topic="/$(arg vehicle_name)/pressure"/>
+		</sensor> 
+
+		<sensor name="imu_filter" type="imu" rate="20.0">
+			<link name="base_link"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+			<noise angle="0.000001745" angular_velocity="0.00001745"/>
+			<ros_publisher topic="/$(arg vehicle_name)/imu"/>
+		</sensor>    -->
+               
+                <!-- Transform + ROS -->
+        <world_transform xyz="$(arg position)" rpy="$(arg orientation)"/>
+        <ros_subscriber thrusters="/$(arg vehicle_name)/setpoint/pwm"/>
+
+    </robot>
+
+</scenario>
+
+
+
+

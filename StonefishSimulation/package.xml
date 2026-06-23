@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>stonefish_qut_rov</name>
+  <version>0.0.1</version>
+  <description>QUT ROV Stonefish scenario package</description>
+  <maintainer email="brad@example.com">Brad</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>stonefish_ros2</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

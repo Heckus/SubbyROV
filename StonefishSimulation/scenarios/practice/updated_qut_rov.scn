@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<scenario>
+
+    <looks>
+        <look name="rov_body" gray="0.55" roughness="0.45" metalness="0.25"/>
+        <look name="foam" rgb="0.15 0.15 0.15" roughness="0.80"/>
+        <look name="thruster" rgb="0.05 0.05 0.05" roughness="0.50"/>
+        <look name="camera" rgb="0.10 0.10 0.10" roughness="0.40"/>
+    </looks>
+
+	<materials>
+		<material name="HullMat" density="1000.0" restitution="0.3"/>
+		<material name="FoamMat" density="100.0" restitution="0.2"/>
+		<material name="ElectronicsMat" density="1500.0" restitution="0.2"/>
+	</materials>
+
+    <robot name="$(arg vehicle_name)" fixed="false" self_collisions="false">
+
+        <base_link name="base_link" type="compound" physics="submerged">
+
+            <!-- Hull residual mass = total - foam(2) - thrusters(4) - camera -->
+            <!-- 4.01503 - 0.1224 - 0.84 - 0.069 = 2.98363 kg -->
+
+            <external_part name="Hull" type="model" physics="submerged" buoyant="false">
+                <physical>
+                    <mesh filename="cad_model_data/rov_models/Updated_full_assembly_phy.obj" scale="1.0"/>
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <thickness value="0.004"/>
+                </physical>
+                <visual>
+                    <mesh filename="cad_model_data/rov_models/25k_N_hole.obj" scale="1.0"/>
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                </visual>
+                <material name="HullMat"/>
+                <look name="rov_body"/>
+                <mass value="2.98363"/>
+                <compound_transform xyz="0 0 0" rpy="0 0 0"/>
+            </external_part>
+
+            <internal_part name="FoamLeft" type="box" physics="submerged" buoyant="true">
+                <dimensions xyz="0.24 0.06 0.05"/>
+                <origin xyz="0 0 0" rpy="-0.7854 0 0"/>
+                <material name="FoamMat"/>
+                <look name="foam"/>
+                <mass value="0.0612"/>
+                <compound_transform xyz="-0.03099 -0.06936 -0.05037" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="FoamRight" type="box" physics="submerged" buoyant="true">
+                <dimensions xyz="0.24 0.06 0.05"/>
+                <origin xyz="0 0 0" rpy="0.7854 0 0"/>
+                <material name="FoamMat"/>
+                <look name="foam"/>
+                <mass value="0.0612"/>
+                <compound_transform xyz="-0.03027 0.07142 -0.05037" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="ThrusterMass_BL" type="sphere" physics="submerged" buoyant="false">
+                <dimensions radius="0.02"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="ElectronicsMat"/>
+                <look name="thruster"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="-0.08625 -0.13998 0.00651" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="ThrusterMass_BR" type="sphere" physics="submerged" buoyant="false">
+                <dimensions radius="0.02"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="ElectronicsMat"/>
+                <look name="thruster"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="-0.08569 0.14131 0.00771" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="ThrusterMass_TL" type="sphere" physics="submerged" buoyant="false">
+                <dimensions radius="0.02"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="ElectronicsMat"/>
+                <look name="thruster"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="0.00201 -0.14498 0.00905" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="ThrusterMass_TR" type="sphere" physics="submerged" buoyant="false">
+                <dimensions radius="0.02"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="ElectronicsMat"/>
+                <look name="thruster"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="0.00257 0.14631 0.00925" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="CameraMass" type="sphere" physics="submerged" buoyant="false">
+                <dimensions radius="0.015"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="ElectronicsMat"/>
+                <look name="camera"/>
+                <mass value="0.069"/>
+                <compound_transform xyz="0.14816 -0.00046 -0.00106" rpy="0 0 0"/>
+            </internal_part>
+
+        </base_link>
+
+        <!-- Thruster actuators -->
+        <!-- Current xyz uses thruster COM as a starter placeholder -->
+        <!-- Replace with prop/axis center later -->
+
+        <!-- Thruster TL -->
+        <actuator name="TL" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="0.00201 -0.14498 0.00905" rpy="0 -1.5708 0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="false">
+                <mesh filename="cad_model_data/ccw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <!-- Thruster TR -->
+        <actuator name="TR" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="0.00257 0.14631 0.00925" rpy="0 -1.5708 0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="true" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="true">
+                <mesh filename="cad_model_data/cw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <!-- Thruster BL -->
+        <actuator name="BL" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="-0.08625 -0.13998 0.00651" rpy="0.0 0.0 0.0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="true">
+                <mesh filename="cad_model_data/cw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <!-- Thruster BR -->
+        <actuator name="BR" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="-0.08569 0.14131 0.00771" rpy="0.0 0.0 0.0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="true" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="false">
+                <mesh filename="cad_model_data/ccw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+                <look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <sensor name="front_camera" type="camera" rate="30.0">
+            <link name="base_link"/>
+            <origin xyz="0.14816 -0.00046 -0.00106" rpy="0 0 0"/>
+            <specs resolution_x="640" resolution_y="480" horizontal_fov="75.0"/>
+            <ros_publisher topic="/$(arg vehicle_name)/camera"/>
+        </sensor>
+
+        <sensor name="pressure" type="pressure" rate="10.0">
+            <link name="base_link"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <noise pressure="5.0"/>
+            <ros_publisher topic="/$(arg vehicle_name)/pressure"/>
+        </sensor>
+
+        <sensor name="imu" type="imu" rate="50.0">
+            <link name="base_link"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <noise angle="0.000001745" angular_velocity="0.00001745"/>
+            <ros_publisher topic="/$(arg vehicle_name)/imu"/>
+        </sensor>
+
+        <world_transform xyz="0 0 0.5" rpy="0 0 0"/>
+
+    </robot>
+</scenario>

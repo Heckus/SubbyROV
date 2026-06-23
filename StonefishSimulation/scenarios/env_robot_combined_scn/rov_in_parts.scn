@@ -1,0 +1,411 @@
+<?xml version="1.0"?>
+<scenario>
+
+	<environment>
+		<ned latitude="56.136459" longitude="-2.706819"/>
+		<ocean>
+			<water density="1031.0" jerlov="0.15"/>
+			<waves height="0.0"/>
+			<particles enabled="true"/>
+			<current type="uniform">
+				<velocity xyz="0.0 0.0 0.0"/>
+			</current>
+			<current type="jet">
+				<center xyz="0.0 0.0 0.0"/>
+				<outlet radius="100.0"/>
+				<velocity xyz="0.0 0.0 0.0"/>
+			</current>
+		</ocean>
+		<atmosphere>
+			<sun azimuth="45.0" elevation="90.0"/>
+		</atmosphere>
+	</environment>
+
+    <materials>
+        <material name="HullMat" density="1000.0" restitution="0.3"/>
+        <material name="FoamMat" density="100.0" restitution="0.2"/>
+        <material name="ElectronicsMat" density="1500.0" restitution="0.2"/>
+        <material name="Neutral" density="1000.0" restitution="0.1"/>
+		<material name="Rock" density="3000.0" restitution="0.8"/>
+		<material name="Fiberglass" density="1500.0" restitution="0.3"/>
+		<material name="Aluminium" density="2710.0" restitution="0.5"/>
+		<friction_table>
+			<friction material1="Neutral" material2="Neutral" static="0.5" dynamic="0.2"/>
+			<friction material1="Neutral" material2="Rock" static="0.2" dynamic="0.1"/>
+			<friction material1="Neutral" material2="Fiberglass" static="0.5" dynamic="0.2"/>
+			<friction material1="Neutral" material2="Aluminium" static="0.1" dynamic="0.02"/>
+			<friction material1="Rock" material2="Rock" static="0.9" dynamic="0.7"/>
+			<friction material1="Rock" material2="Fiberglass" static="0.6" dynamic="0.4"/>
+			<friction material1="Rock" material2="Aluminium" static="0.6" dynamic="0.3"/>
+			<friction material1="Fiberglass" material2="Fiberglass" static="0.5" dynamic="0.2"/>
+			<friction material1="Fiberglass" material2="Aluminium" static="0.5" dynamic="0.2"/>
+			<friction material1="Aluminium" material2="Aluminium" static="0.8" dynamic="0.5"/>
+		</friction_table>
+    </materials>
+
+
+    <looks>
+
+        <!-- QUT ROV looks -->
+        <look name="rov_body" gray="0.55" roughness="0.45" metalness="0.25"/>
+        <look name="foam" rgb="0.15 0.15 0.15" roughness="0.80"/>
+        <look name="thruster" rgb="0.05 0.05 0.05" roughness="0.50"/>
+        <look name="camera" rgb="0.10 0.10 0.10" roughness="0.40"/>
+
+        <!-- Open ocean looks -->
+        <look name="black" gray="0.05" roughness="0.2"/>
+		<look name="yellow" rgb="1.0 0.9 0.0" roughness="0.3"/>
+		<look name="gray" gray="0.5" roughness="0.4" metalness="0.5"/>
+		<look name="ltgray" gray="0.75" roughness="1.0" metalness="0.0"/>
+		<look name="tank" rgb="0.9 0.9 0.9" roughness="0.9"/>
+		<look name="duct" gray="0.1" roughness="0.4" metalness="0.5"/>
+
+    	<look name="sand"
+          gray="1.0"
+          roughness="0.7"
+          metalness="0.3"
+          texture="cad_model_data/ocean_test_data/SoilBeach0078_1_350.jpg"/>
+
+    	<look name="gas_canister"
+          gray="1.0"
+          roughness="0.5"
+          metalness="0.3"
+          texture="cad_model_data/ocean_test_data/gas_canister.png"/>
+
+    	<look name="gas_tank"
+          gray="1.0"
+          roughness="0.5"
+          metalness="0.5"
+          texture="cad_model_data/ocean_test_data/gas_tank.png"/>
+
+    	<look name="oil_drum"
+          gray="1.0"
+          roughness="0.5"
+          metalness="0.2"
+          texture="cad_model_data/ocean_test_data/oil_drum.png"/>
+
+    	<look name="rust_pipe"
+          gray="1.0"
+          roughness="0.5"
+          metalness="0.2"
+          texture="cad_model_data/ocean_test_data/rust_pipe.png"/>
+
+    	<look name="anode_bar"
+          gray="1.0"
+          roughness="0.5"
+          metalness="0.2"
+          texture="cad_model_data/ocean_test_data/anode_d.png"/>
+
+          <look name="green" rgb="0 1 0" roughness="0.5"/>
+
+        <look name="turbine_base" gray="1.0" roughness="0.4" metalness="0.5" texture="cad_model_data/ocean_test_data/Turbine_Base_Diffuse.png"/>
+		<look name="turbine_main" gray="1.0" roughness="0.4" metalness="0.5" texture="cad_model_data/ocean_test_data/Turbine_Main_Diffuse.png"/>
+    </looks>
+
+    <static name="Seabed" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/flat.obj" scale="1.0"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Rock"/>
+		<look name="sand"/>
+		<world_transform rpy="0.0 0.0 0.0" xyz="0.0 0.0 6.0"/>
+	</static>
+
+	<static name="Canister1" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/gas_canister.obj" scale="1"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Aluminium"/>
+		<look name="gas_canister"/>
+		<world_transform rpy="0.0 0.0 0.0" xyz="4.0 0.0 5.1"/>
+	</static>
+
+	<static name="Gastank1" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/gas_tank.obj" scale="1"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Aluminium"/>
+		<look name="gas_tank"/>
+		<world_transform rpy="-1.57 0.0 0.0" xyz="0.0 -4.0 5.1"/>
+	</static>
+
+	<static name="Gastank2" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/gas_tank.obj" scale="1"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Aluminium"/>
+		<look name="gas_tank"/>
+		<world_transform rpy="-1.57 0.0 0.0" xyz="3.0 3.0 5.0"/>
+	</static>
+
+	<static name="Oildrum1" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/oil_drum.obj" scale="1"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Aluminium"/>
+		<look name="oil_drum"/>
+		<world_transform rpy="-1.57 0.0 -1.57" xyz="0.0 4.0 5.0"/>
+	</static>
+
+	<static name="Oildrum2" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/oil_drum.obj" scale="1"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Aluminium"/>
+		<look name="oil_drum"/>
+		<world_transform rpy="0.0 0.0 -1.57" xyz="-3.0 -3.0 5.1"/>
+	</static>
+
+	<static name="Rustpipe" type="model">
+		<physical>
+			<mesh filename="cad_model_data/ocean_test_data/rust_pipe.obj" scale="1"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		</physical>
+		<material name="Aluminium"/>
+		<look name="rust_pipe"/>
+		<world_transform rpy="0.0 1.57 1.57" xyz="-4.0 0.0 5.3"/>
+	</static>
+
+    <robot name="updatedqutrov" fixed="false" self_collisions="false">
+
+        <base_link name="base_link" type="compound" physics="submerged">
+
+        
+            <external_part name="Hull" type="model" physics="submerged" buoyant="false">
+                <physical>
+                    <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/rov_models/8k_no_holes_blender.obj" scale="1.0"/>
+					<origin rpy="0.0 0.0 0.0" xyz="0 0.0 0.0"/>
+					<!-- <thickness value="0.005"/> -->
+                </physical>
+                <visual>
+                    <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/rov_models/8k_no_holes_blender.obj" scale="1.0"/>
+                    <origin rpy="0.0 0.0 0.0" xyz="0 0.0 0.0"/>
+                </visual>
+                <material name="HullMat"/>
+                <look name="rov_body"/>
+                <mass value="1.7126"/>
+                <compound_transform xyz="0 0 0" rpy="0 0 0"/>
+            </external_part>
+
+            <internal_part name="wte" type="cylinder" physics="submerged" buoyant="true">
+                <dimensions radius="0.044" height="0.34"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="HullMat"/>
+                <look name="None"/>
+                <mass value="0.884"/>
+                <!-- <compound_transform xyz="0.00516 -0.00060 -0.00086" rpy="0 1.5708 0"/> -->
+                <compound_transform xyz="0.0 -0.00060 -0.00086" rpy="0 1.5708 0"/>
+
+            </internal_part>
+
+            <internal_part name="FoamLeft" type="box" physics="submerged" buoyant="true">
+                <dimensions xyz="0.24 0.06 0.05"/>
+                <origin xyz="0.0 0.0 0.0" rpy="-0.7854 0.0 0.0"/>
+                <material name="FoamMat"/>
+                <look name="None"/>
+                <mass value="0.0612"/>
+                <compound_transform xyz="-0.03099 -0.06936 -0.05037" rpy="0 0.0 0.0"/>
+
+            </internal_part>
+
+            <internal_part name="FoamRight" type="box" physics="submerged" buoyant="true">
+                <dimensions xyz="0.24 0.06 0.05"/>
+                <origin xyz="0.0 0.0 0.0" rpy="0.7854 0.0 0.0"/>
+                <material name="FoamMat"/>
+                <look name="None"/>
+                <mass value="0.0612"/>
+                <compound_transform xyz="-0.03027 0.07142 -0.05037" rpy="0.0 0.0 0.0"/>
+
+            </internal_part>
+
+            <internal_part name="Thruster_BL" type="sphere" physics="submerged">
+                <dimensions radius="0.02"/>
+                <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                <material name="ElectronicsMat"/>
+                <look name="None"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="-0.08625 -0.13998 0.00651" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <internal_part name="Thruster_BR" type="sphere" physics="submerged">
+                <dimensions radius="0.02"/>
+                <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                <material name="ElectronicsMat"/>
+                <look name="None"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="-0.08569 0.14131 0.00771" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <internal_part name="Thruster_TL" type="sphere" physics="submerged">
+                <dimensions radius="0.02"/>
+                <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                <material name="ElectronicsMat"/>
+                <look name="None"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="0.00201 -0.14498 0.00905" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <internal_part name="Thruster_TR" type="sphere" physics="submerged">
+                <dimensions radius="0.02"/>
+                <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                <material name="ElectronicsMat"/>
+                <look name="None"/>
+                <mass value="0.21"/>
+                <compound_transform xyz="0.00257 0.14631 0.00925" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <internal_part name="dome" type="sphere" physics="submerged" buoyant="true">
+                <dimensions radius="0.03"/>
+                <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                <material name="HullMat"/>
+                <look name="None"/>                
+                <mass value="0.026"/>
+                <compound_transform xyz="0.17 -0.00046 -0.00106" rpy="0.0 0.0 0.0"/>
+            </internal_part>
+
+            <internal_part name="light" type="cylinder" physics="submerged" buoyant="true">
+                <dimensions radius="0.01737" height="0.03474"/>
+                <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+                <material name="HullMat"/>
+                <look name="None"/>                
+                <mass value="0.118"/>
+                <compound_transform xyz="0.0512 -0.01445 0.1047" rpy="0 1.5708 0"/>
+            </internal_part>
+
+            <internal_part name="FrameBarLeft" type="box" physics="submerged" buoyant="true">
+                <dimensions xyz="0.131 0.01864 0.014"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="HullMat"/>
+                <look name="None"/>
+                <mass value="0.1"/>
+                <compound_transform xyz="0.01 -0.07857 0.005" rpy="0 0 0"/>
+            </internal_part>
+
+            <internal_part name="FrameBarRight" type="box" physics="submerged" buoyant="true">
+                <dimensions xyz="0.131 0.01864 0.014"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="HullMat"/>
+                <look name="None"/>
+                <mass value="0.1"/>
+                <compound_transform xyz="0.01 0.07857 0.005" rpy="0 0 0"/>
+            </internal_part>
+
+        </base_link>
+
+        <actuator name="TL" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="0.00201 -0.14498 0.00905" rpy="0 -1.5708 0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="false">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/ccw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+				<look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <actuator name="TR" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="0.00257 0.14631 0.00925" rpy="0 -1.5708 0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="true">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/cw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+				<look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <actuator name="BL" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="-0.08625 -0.13998 0.00651" rpy="0.0 0.0 0.0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="true">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/cw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+				<look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <actuator name="BR" type="thruster">
+            <link name="base_link"/>
+            <origin xyz="-0.08569 0.14131 0.00771" rpy="0.0 0.0 0.0"/>
+            <specs max_setpoint="3600.0" inverted_setpoint="false" normalized_setpoint="false"/>
+            <rotor_dynamics type="zero_order"/>
+            <thrust_model type="fluid_dynamics">
+                <rotor_constant value="0.001"/>
+                <thrust_coeff forward="0.043" reverse="0.043"/>
+                <torque_coeff value="0.004"/>
+            </thrust_model>
+            <propeller diameter="0.077" right="false">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/ccw.obj" scale="1.0"/>
+                <material name="Neutral"/>
+				<look name="thruster"/>
+            </propeller>
+        </actuator>
+
+        <world_transform xyz="0 0 0.5" rpy="0 0 0"/>
+
+
+        <!-- COMMENTING OUT SENSORS FOR THE TIME BEING -->
+<!-- 
+        <sensor name="camera" type="camera" rate="30">
+            <specs resolution_x="640" resolution_y="480" horizontal_fov="75.0"/>
+            <origin xyz="0.14816 -0.00046 -0.00106" rpy="0.0 0.0 0.0"/>
+            <link name="base_link"/>
+            <ros_publisher topic="/$(arg vehicle_name)/left"/>
+        </sensor> 
+
+        <sensor name="imu" type="imu" rate="50">
+            <link name="base_link"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </sensor> 
+
+		<sensor name="pressure" type="pressure" rate="5.0">
+			<link name="base_link"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+			<noise pressure="5.0"/>
+			<ros_publisher topic="/$(arg vehicle_name)/pressure"/>
+		</sensor> 
+
+		<sensor name="imu_filter" type="imu" rate="20.0">
+			<link name="base_link"/>
+			<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+			<noise angle="0.000001745" angular_velocity="0.00001745"/>
+			<ros_publisher topic="/$(arg vehicle_name)/imu"/>
+		</sensor>    -->
+
+        <!-- <ros_subscriber thrusters="/updatedqutrov/setpoint/pwm"/> -->
+    </robot>
+
+</scenario>
+
+
+
+

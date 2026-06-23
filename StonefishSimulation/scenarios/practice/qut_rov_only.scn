@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<scenario>
+    <robot name="$(arg vehicle_name)" fixed="false" self_collisions="false">
+        <base_link name="Vehicle" type="model" physics="surface">
+
+            <physical>
+                <mesh filename="cad_model_data/Full_Assembly_obj_physical.obj" scale="0.001"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </physical>
+
+            <visual>
+                <mesh filename="cad_model_data/Full_Assembly_obj_vs.obj" scale="0.001"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </visual>
+
+            <material name="ROVMat"/>
+            <look name="ROVLook"/>
+
+            <mass value="4.089"/>
+            <inertia xyz="0.02895 0.02752 0.04490"/>
+            <cg xyz="-0.00033 0.00015 -0.00790" rpy="0 0 0"/>
+
+        </base_link>
+
+        <world_transform xyz="$(arg position)" rpy="$(arg orientation)"/>
+    </robot>
+</scenario> 
+
+<!-- <?xml version="1.0"?>
+<scenario>
+    <robot name="$(arg vehicle_name)" fixed="false" self_collisions="false">
+        <base_link name="Vehicle" type="model" physics="surface">
+
+            <physical>
+                <mesh filename="cad_model_data/Full_Assembly_obj_physical.obj" scale="0.001"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </physical>
+
+            <visual>
+                <mesh filename="cad_model_data/Full_Assembly_obj_vs.obj" scale="0.001"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </visual>
+
+            <material name="ROVMat"/>
+            <look name="ROVLook"/>
+
+            <mass value="4.089"/>
+            <inertia xyz="0.2 0.2 0.3"/>
+            <cg xyz="0 0 0" rpy="0 0 0"/>
+
+        </base_link>
+
+        <world_transform xyz="$(arg position)" rpy="$(arg orientation)"/>
+    </robot>
+</scenario> -->

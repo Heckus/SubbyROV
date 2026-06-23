@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<scenario>
+
+    <environment>
+        <ned latitude="-27.47" longitude="153.03"/>
+
+        <ocean>
+            <water density="1031.0" temperature="20.0"/>
+            <waves height="0.0"/>
+            <current type="uniform">
+                <velocity xyz="0 0 0"/>
+            </current>
+        </ocean>
+    </environment>
+
+    <materials>
+        <!-- ROV physical material -->
+        <material name="ROVMat" density="1000.0" restitution="0.3"/>
+
+        <!-- Seafloor physical material -->
+        <material name="FloorMat" density="2000.0" restitution="0.2"/>
+
+        <friction_table>
+            <friction material1="ROVMat" material2="ROVMat" static="0.6" dynamic="0.4"/>
+            <friction material1="ROVMat" material2="FloorMat" static="0.7" dynamic="0.5"/>
+            <friction material1="FloorMat" material2="FloorMat" static="0.8" dynamic="0.6"/>
+        </friction_table>
+    </materials>
+
+    <looks>
+        <look name="ROVLook" rgb="0.30 0.30 0.35" roughness="0.5"/>
+        <look name="FloorLook" rgb="0.45 0.42 0.35" roughness="0.9"/>
+    </looks>
+
+    <static name="floor" type="plane">
+        <material name="FloorMat"/>
+        <look name="FloorLook"/>
+        <world_transform xyz="0 0 5" rpy="0 0 0"/>
+    </static>
+
+    <dynamic name="QUT_ROV" type="model" physics="submerged" buoyant="true">
+        <physical>
+            <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/Full_Assembly_obj_physical.obj"
+                  scale="0.001"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </physical>
+
+        <visual>
+            <mesh filename="/home/brad/Desktop/EGH490/ros2_ws/src/stonefish_qut_rov/cad_model_data/Full_Assembly_obj_physical.obj"
+                  scale="0.001"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </visual>
+
+        <material name="ROVMat"/>
+        <look name="ROVLook"/>
+        <mass value="4.089"/>
+        <world_transform xyz="0 0 1.0" rpy="0 0 0"/>
+    </dynamic>
+
+</scenario>

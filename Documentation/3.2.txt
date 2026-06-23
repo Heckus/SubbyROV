@@ -1,0 +1,371 @@
+                                     Title of EGH445 Assessment/Report
+                                                           Joshua1 , N11585382
+
+
+   Abstract— This report outlines the comprehensive modelling,                                  II. S YSTEM M ODELING
+discretisation, and control system design for an underactuated
+Remotely Operated Vehicle (ROV) operating in a complex                         Applying an Earth-fixed inertial frame {E} and a Body-
+hydrodynamic environment. A 3-DOF planar model is derived                   fixed frame {B}, system states are defined as posi-
+from the full 6-DOF rigid-body dynamics and linearised around
+a stable equilibrium point. A discrete-time Linear Quadratic                tion/orientation η = [x, y, z, ϕ, θ, ψ]T and body velocities
+Integral (LQI) controller featuring an advanced anti-windup                 ν = [u, v, w, p, q, r]T . The 6-DOF rigid-body equations of
+scheme is implemented. The LQI design process is detailed,                  motion are given by standard marine hydrodynamic theory
+demonstrating robust tracking on linear, non-linear, and highly             [1]:
+noisy blackbox plants despite severe actuator saturation con-
+straints. Furthermore, a discrete-time Luenberger observer is
+designed using optimal pole placement techniques for the dead-                η̇ = J(η)ν,       Mν̇ + C(ν)ν + D(ν)ν + g(η) = τ                (1)
+reckoning of unmeasured states (x, z). Extensive simulation
+analysis demonstrates that while the LQI controller is highly               A. Decoupling and Design Parameters
+effective at disturbance rejection, the observer inevitably drifts
+over time due to noise integration. The report concludes that                   Assuming low-speed operation in calm water with negli-
+dead reckoning is highly discouraged for this type of system,               gible roll, sway, and yaw, the dynamics safely decouple into
+emphasizing the necessity of absolute positioning sensors for               a 3-DOF longitudinal planar model (surge x, u, heave z, w,
+autonomous subsea operations.
+                                                                            pitch θ, q). This targeted planar representation is vital as it
+                         I. I NTRODUCTION                                   heavily streamlines control derivation while preserving the
+                                                                            primary operational workspace of the ROV. Relevant mass,
+   This report analyzes the modeling and control strategies                 inertia, and hydrodynamic parameters are updated for the
+of an underactuated research ROV to achieve optimal per-                    specific dual-horizontal/vertical thruster configuration (Table
+formance and autonomous waypoint tracking. Operating in                     I).
+complex hydrodynamic environments, this study leverages
+Fossen’s framework [1] and SNAME standards [2] for state-                                                 TABLE I
+space representation, alongside Scilletta’s work [3] for pa-                                 ROV P LANAR M ODEL PARAMETERS
+rameter identification. The focus is on a specific variant (sim-
+                                                                               Sym.       Value     Unit           Sym.     Value    Unit
+ilar to Fig. 1) featuring translated aft horizontal thrusters and
+                                                                                m         16.6      kg              Xu      9.716    N s/m
+90-degree rotated vertical thrusters. The objective is to design                W         162.846   N               Zw      68.855   N s/m
+a robust output-feedback controller capable of navigating this                  B         168.928   N              Mq       0.07     N s/rad
+vessel accurately, while critically evaluating the performance                  Iy        0.66054   kg m2         Xu|u|     18.18    N s2 /m2
+limitations and engineering trade-offs inherent in the subsea                   Xu̇       1.3169    kg            Zw|w|     36.99    N s2 /m2
+domain.                                                                         Zẇ       14.4260   kg            Mq|q|     1.55     N s2 /rad2
+                                                                               Mq̇        0.3637    kg m2 /rad      zg      0.03     m
+                                                                               lx,v       0.0       m            lz,h,top   -0.1     m
+                                                                              lz,h,bot    0.1       m
+
+
+                                                                               The resulting 3-DOF conceptually derived matrices isolate
+                                                                            the coupled dynamics into distinct translation and rotational
+                                                                            components:
+
+                                                                                         M = diag(m − Xu̇ , m − Zẇ , Iy − Mq̇ )              (2)
+
+                                                                            D(ν) = −diag(Xu +Xu|u| |u|, Zw +Zw|w| |w|, Mq +Mq|q| |q|)
+  Fig. 1.   Example of an underactuated research ROV. Image from [4].                                                             (3)
+                                                                                               g(η) = [0, 0, zg W sin(θ)]T                    (4)
+  1 Joshua is with Faculty of Engineering, Queensland University
+                                                                            Notably, the hydrostatic restoring forces g(η) provide a nat-
+of Technology (QUT), Australia. This report is in partial fulfil-
+ment of EGH445 unit requirements and submitted on dd/mm/yyyy.               ural, passive pendulum effect that fights pitch disturbances,
+joshua.hecke@connect.edu.au                                                 a crucial element for intrinsic stability.
+
+                                                                        1
+B. State Space Representation                                               The linearised A matrix simplifies drastically. Because
+  This decoupling reduces the state space to a 3 DOF                     linearisation is evaluated at zero velocity, all non-linear
+system with states x = [x, z, θ, u, w, q]T and control inputs            quadratic hydrodynamic damping and Coriolis terms mathe-
+uc = [u1 , u2 , u3 , u4 ]T . The continuous non-linear state space       matically collapse. Furthermore, small-angle approximations
+model takes the State-Dependent Coefficient (SDC) form:                  are applied to the gravity restoring moments (sin(θ) ≈ θ):
+                                                                                                                               
+                                                                                      0 0      0         1       0         0
+                      ẋ = A(x)x + Buc                        (5)                   0 0       0         0       1         0 
+                                                                                                                               
+                                                                                    0 0       0         0       0         1 
+   The non-linear state-dependent system matrix A(x) cap-
+                                                                            Alin = 0 0                 −Xu                       (8)
+                                                                                                                               
+tures the full complexity of the planar kinematics, quadratic                                 0       m−Xu̇     0         0   
+                                                                                    0 0                        −Zw
+drag, and coupled Coriolis forces:                                                            0         0     m−Zẇ       0   
+                                                                                             −zg W                       −Mq
+                                                                                    0 0 Iy −Mq̇        0       0      Iy −Mq̇
+             0 0      0        cos θ    sin θ      0
+           0 0
+                     0      − sin θ    cos θ      0                      Because the thruster configuration and rigid-body geom-
+           0 0       0          0        0        1                    etry are entirely independent of the spatial orientation near
+  A(x) =                                              (6)
+           0 0       0       a44 (u) a45 (q)      0                   hover, the linearised input matrix Blin maps identically to
+           0 0       0       a54 (q) a55 (w)      0                    the non-linear system:
+             0 0 a63 (θ) a64 (w)          0     a66 (q)                                                                  
+                                                                                                     0     0     0     0
+The embedded non-linear coefficients are defined as:                                              0       0     0     0
+                                                                                                                         
+                                                                                                  0       0     0     0
+   • Surge Damping: a44 (u) = −(Xu +Xu|u| |u|)/(m−Xu̇ )                             Blin = B =                                   (9)
+                                                                                                  b41    b41    0     0
+   • Surge Coriolis: a45 (q) = −(m − Zẇ )q/(m − Xu̇ )                                                                   
+                                                                                                  0       0    b53 b53 
+   • Heave Coriolis: a54 (q) = (m − Xu̇ )q/(m − Zẇ )
+   • Heave Damping: a55 (w) = −(Zw + Zw|w| |w|)/(m −
+                                                                                                   b61,t b61,b 0       0
+      Zẇ )
+                                  −zg W   sin θ
+                                                
+   • Pitch Restoring: a63 (θ) = I −M        θ
+                                  y    q̇
+   • Pitch Munk Moment: a64 (w) = (Zẇ −Xu̇ )w/(Iy −Mq̇ )
+   • Pitch Damping: a66 (q) = −(Mq + Mq|q| |q|)/(Iy − Mq̇ )
+
+   The input matrix B is modified to reflect the physical
+geometry of the split thrusters. Because the vertical thrusters
+(u3 , u4 ) are located dead-center longitudinally (lx,v = 0),
+they exert strictly zero pitch moment, placing the entire
+burden of active pitch authority on the stacked horizontal
+thrusters (u1 , u2 ):
+                                               
+                         0     0      0     0
+                       0      0      0     0
+                                               
+                       0      0      0     0
+                 B=                                      (7)
+                       b41   b41     0     0  
+                       0      0     b53 b53    
+                       b61,t b61,b 0        0
+              1              1                      l
+where b41 = m−X u̇
+                   , b53 = m−Z ẇ
+                                  , b61,t = Iz,h,top
+                                             y −Mq̇
+                                                     , and               Fig. 2. Comparison of Linear and Non-Linear model depth and pitch
+        l                                                                responses to an amplified step input.
+b61,b = Iz,h,bot
+          y −Mq̇
+                 .
+                                                                            The profound effect of linearisation is evident in the open-
+C. Linearisation and Equilibrium Justification                           loop response (Fig. 2). The absence of quadratic damping in
+   To apply modern linear control theory, the system must be             the linear model causes it to predict a slightly faster, less
+linearised. An equilibrium point representing a stable hover             damped response. Furthermore, the linear model completely
+was selected, where all velocities and orientation angles are            fails to capture the sustained oscillatory pitch motion caused
+zero (θ = 0, u = 0, w = 0, q = 0).                                       by the non-linear Munk moment, which is highly visible
+   A critical engineering insight is that the spatial coordinates        in the true non-linear response. This glaring unmodelled
+x and z are translationally invariant in calm water. The                 pitch variation directly drives the engineering selection of an
+gravitational and buoyant forces acting on the vehicle do                LQI controller, as standard proportional feedback would fail
+not change regardless of its absolute position in the fluid              to reject these persistent non-linear oscillatory disturbances
+domain. Therefore, x and z can take arbitrary values at                  without steady-state error. Despite this discrepancy, the linear
+equilibrium. By selecting the origin xe = 0, uc,e = 0 as                 model accurately captures the fundamental coupled dynamics
+the linearisation point, the resulting Jacobian matrices apply           and dominant time constants, confirming its validity as the
+universally across the entire spatial workspace.                         foundation for state-feedback control synthesis.
+
+                                                                     2
+D. Discretisation and System Bandwidth Analysis                           A. Linear Quadratic Integral (LQI) Formulation
+   To bridge the gap between continuous mathematical theory                  A standard state-feedback regulator (LQR) drives states
+and digital microcontroller execution, the linear system was              to zero, but cannot guarantee zero steady-state error in the
+discretised using a zero-order hold (ZOH) transformation.                 presence of un-modelled dynamics (such as the quadratic
+Selecting the appropriate sampling time Ts requires balanc-               drag intentionally linearised away) or constant environmental
+ing computational load against control degradation caused                 disturbances (e.g., ocean currents).
+by digital phase lag.                                                        To overcome this fundamental performance limitation, a
+   The selection was driven by evaluating the open-loop sys-              discrete-time Linear Quadratic Integral (LQI) controller was
+tem’s bandwidth. The highest natural frequency fmax of the                designed. The standard state vector was augmented with 3
+linearised plant was analytically found via the eigenvalues               virtual integral states representing the accumulated tracking
+of the continuous Alin matrix, yielding fmax ≈ 5.04 Hz.                   error for x, z, and θ. The augmented discrete system takes
+According to the Nyquist-Shannon sampling theorem, the                    the form:
+absolute maximum theoretical sampling period to prevent                                                      
+aliasing is Tnyquist ≈ 0.1 s.                                                    xk+1            Ad        0 xk        Bd
+                                                                                        =                           +       uk     (10)
+   While aggressive control heuristics often recommend sam-                      vk+1        −Ctrack Ts I vk            0
+pling at 20× the system bandwidth (which would demand
+                                                                          where vk is the integral state vector and Ctrack extracts the
+a rapid Ts ≈ 0.01 s), this can be computationally excessive
+                                                                          positional states.
+for embedded systems. Therefore, a practical 20 Hz sampling
+rate (Ts = 0.05 s) was selected. This period sits comfortably                The optimal feedback gain matrix K = [Kx Ki ] was
+between the Nyquist limit and the aggressive 20× heuristic,               computed by solving the discrete algebraic Riccati equation
+providing a stable control margin while accurately replicating            to minimize the cost function J:
+the standard polling capabilities of current, commercially                                 ∞
+                                                                                           X
+available subsea hardware.                                                            J=         (xTaug,k Qxaug,k + uTk Ruk )       (11)
+                                                                                           k=0
+
+                                                                          B. Tuning and Design Trade-offs
+                                                                             Engineering judgement was heavily exercised during the
+                                                                          tuning of the Q and R weighting matrices. The Q matrix
+                                                                          was tuned to heavily penalize positional tracking errors,
+                                                                          particularly depth and pitch (Qz = 100, Qθ = 500), en-
+                                                                          suring tight regulation and rapid disturbance rejection. The
+                                                                          integral states were assigned moderate weights to provide
+                                                                          sufficient corrective action without inducing low-frequency
+                                                                          oscillations.
+                                                                             The control effort penalty R = 10I4×4 was chosen to
+                                                                          deliberately allow aggressive transient responses. Lowering
+                                                                          R further resulted in unacceptable high-frequency thruster
+                                                                          chatter, representing a critical trade-off between tracking
+                                                                          speed and actuator longevity.
+
+                                                                          C. Actuator Saturation and Anti-Windup
+
+Fig. 3. 3-Way Open Loop Comparison: Non-Linear vs Linear Continuous          Physical ROV thrusters are strictly limited; in the simu-
+vs Linear Discrete (20 Hz).                                               lated environment, they saturate at ±20 N. When aggressive
+                                                                          LQI gains demand thrust beyond these limits, the physical
+  As verified in Fig. 3, the 20 Hz discrete model perfectly               system cannot comply. If left unaddressed, the virtual integral
+overlays the continuous linear baseline without inducing se-              states will continue to accumulate error, leading to massive
+vere phase lag or aliasing. This confirms that 20 Hz provides             overshoot and potential instability once the error finally
+sufficient fidelity for controller synthesis while remaining              changes sign.
+computationally lightweight for standard marine electronics.                 To adapt the standard LQI method beyond taught linear
+                                                                          constraints, a back-calculation anti-windup scheme was inte-
+               III. C ONTROL S YSTEM D ESIGN                              grated. If the commanded thrust uunbounded exceeds umax ,
+                                                                          the saturated difference is fed back to decrement the integral
+  The objective of the control system is to command the                   state dynamically using a back-calculation gain Kaw =
+ROV to track dynamic sequential waypoints in x and z, while               (K†i )/Ts . This ensures the internal controller states remain
+maintaining a level pitch (θ = 0).                                        synchronized with the physical reality of the actuators.
+
+                                                                      3
+                                                                            Fig. 6.    LQI controller recovery from extreme offset initial conditions.
+
+
+
+                                                                           LQI feedback aggressively saturates the thrusters and safely
+                                                                           forces the ROV back to the origin waypoint within 10
+   Fig. 4.   LQI tracking performance on the idealized Linear Plant.       seconds, stabilizing the severe 20◦ pitch offset almost in-
+                                                                           stantaneously.
+
+
+
+
+   Fig. 5.   LQI tracking performance on the true Non-Linear Plant.
+
+
+
+D. Performance Analysis: Linear vs. Non-Linear                             Fig. 7.    Spatial trace of the ROV recovering from the x = 2m, z = 3m
+                                                                           offset.
+   The LQI controller was first evaluated on the linear plant,
+and then critically tested against the true, coupled Non-                    The spatial recovery path is further visualised in Fig. 7.
+Linear plant.                                                              This animated trace confirms that the controller does not
+   Comparing Fig. 4 and Fig. 5 provides profound insight                   merely wildly oscillate back to the origin, but takes a highly
+into the robustness of the LQI design. On the idealized linear             coordinated, smooth trajectory through the fluid domain. The
+plant, the responses are perfectly crisp. When subjected to the            vehicle aggressively dives while surging backwards, lever-
+non-linear plant, the introduction of quadratic drag naturally             aging its coupled dynamics to arrive precisely at the target
+slows the physical response. However, thanks to the integral               coordinate without colliding with the surface or exhibiting
+action, the controller seamlessly compensates for this drag,               unstable looping.
+driving the steady-state error strictly to zero. Notice in the
+lower pane of Fig. 5 that the thrusters rapidly saturate at                          IV. S YSTEM L IMITATIONS AND E NGINEERING
+20 N during the initial surge, but the anti-windup scheme                                            T RADE - OFFS
+prevents any consequent overshoot, validating the advanced                   While the formulated state-space model provides an ex-
+control architecture.                                                      cellent mathematical foundation, the decoupling assumptions
+                                                                           and parameters utilized (m = 16.6kg, significant quadratic
+E. Robustness and Recovery                                                 drag) are inherently characteristic of a heavy, square-profile
+   To further stress-test the controller, the ROV was initial-             ROV, primarily drawn from external literature [3]. Con-
+ized with a massive spatial and angular offset (x = 2m,                    versely, the ideal vehicle for this project is envisioned
+z = 3m, θ = 20◦ ).                                                         as a smaller, tube-shaped research ROV. A tubular hull
+   As demonstrated in the state responses (Fig. 6), the                    exhibits fundamentally different hydrodynamic properties,
+controller exhibits exceptional resilience. Despite starting               specifically reduced form drag and greater natural lateral de-
+completely outside the intended operational envelope, the                  coupling. Applying the square-profile parameters to a tubular
+
+                                                                       4
+design introduces a baseline modelling error, representing a               by the misaligned vertical thrusters. However, the control
+fundamental limitation in the current theoretical approach.                effort exhibits continuous high-frequency chatter as it fights
+   Additionally, the LQI control structure operates under                  the injected measurement noise. While this chatter signifi-
+the assumption of full state feedback, requiring real-time                 cantly increases mechanical wear on the physical thrusters,
+measurement of spatial coordinates (x and z). While depth                  it represents an acceptable engineering trade-off required to
+(z) is easily obtained via pressure sensors, surge (x) re-                 maintain sub-meter tracking accuracy in a harsh, mismatched
+quires complex external systems like Doppler Velocity Logs                 subsea environment.
+(DVLs) or acoustic transponder arrays. Severe environmental
+                                                                                              V. O BSERVER D ESIGN
+limitations, such as confined operational spaces, acoustic
+multipath interference, or prohibitive hardware costs, often                  Because state-feedback control assumes all state variables
+make these measurements unfeasible in practice, breaking                   are perfectly known, unmeasured coordinates like surge (x)
+the foundational LQI assumption.                                           must be estimated if acoustic sensors are unavailable. A
+                                                                           discrete-time Luenberger Observer was formulated to esti-
+A. Blackbox System Mismatch and Robustness Analysis                        mate the full state vector x̂ using only available measure-
+   To evaluate the controller against the aforementioned mod-              ments y:
+elling limitations, it was deployed on a customized “Black-
+box” plant. This environment was intentionally designed to                          x̂k+1 = Ad x̂k + Bd uk + Ld (yk − Cd x̂k )        (12)
+represent a third-party attempt at applying the LQI controller             A. Pole Placement Strategy
+to a physically constructed ROV that failed to perfectly
+                                                                              The observer gain matrix Ld determines the convergence
+replicate the theoretical CAD properties.
+                                                                           dynamics of the estimation error. Rather than manually
+   Specific un-modelled mismatches were introduced:
+                                                                           placing poles, the discrete LQR dual formulation (‘dlqr‘)
+   • The Center of Gravity (zg ) was shifted from 0.03m to
+                                                                           was utilized. This elegant method frames the observer design
+     0.02m, decreasing the hydrostatic restoring moment and                as an optimal filtering problem, balancing the covariance of
+     rendering the ROV slightly less stable in pitch.                      process noise (trust in the mathematical model, Qobs ) against
+   • The vertical thrusters were physically misaligned (lx,v
+                                                                           measurement noise (trust in the sensors, Robs ).
+     changed from 0 to −0.015m). This introduced a severe                     The process noise matrix Qobs was tuned to be excep-
+     unmodelled pitch moment during any heave commands,                    tionally high, forcing the observer poles deeper into the
+     violating the core mathematical assumption of the B                   unit circle than the controller poles. This ensures that the
+     matrix.                                                               estimation error decays significantly faster than the system
+   • The horizontal thrusters were mounted 2cm wider than
+                                                                           dynamics, fulfilling the separation principle and preventing
+     specified (lz,h increased to ±0.12m), artificially altering           the observer from destabilizing the closed-loop controller.
+     pitch authority.
+   • Hull drag coefficients (Xu , Zw , Xu|u| , Zw|w| ) were uni-           B. Dead Reckoning & Performance Limitations
+     formly increased by 15%, simulating a rougher or                         A critical limitation was identified during the observability
+     bulkier hull than the idealized CAD model suggested.                  analysis: absolute surge position (x) is mathematically un-
+                                                                           observable from internal IMU and pressure data alone. The
+                                                                           observer is forced to rely entirely on integrating the estimated
+                                                                           velocity u over time, a process known as dead reckoning.
+                                                                              The profound consequences of this limitation are visual-
+                                                                           ized in Fig. 9. When deployed on the Blackbox plant, the ob-
+                                                                           server perfectly tracks pitch and velocities. However, because
+                                                                           dead reckoning involves pure integration, any microscopic
+                                                                           estimation error, un-modelled disturbance, or sensor noise is
+                                                                           continuously accumulated. The estimated x and z states drift
+                                                                           linearly away from reality, eventually diverging by several
+                                                                           meters.
+                                                                              Dead reckoning is highly not recommended for this type of
+                                                                           system and shows why additional measurement is required
+                                                                           on these kinds of systems to get x and z (or y). Without
+                                                                           this measurement, it is difficult to control these systems.
+Fig. 8. LQI robustness demonstrated on the noisy Blackbox plant with
+                                                                           The persistent integration of un-modelled disturbances and
+mismatched dynamics.                                                       noise found in the blackbox environment mathematically
+                                                                           guarantees position drift. It is concluded that additional
+   The tracking results on the Blackbox plant (Fig. 8) demon-              sensory measurement (e.g., Doppler Velocity Logs, Ultra-
+strate that the system remains highly stable, completely                   Short Baseline acoustic transponders, or vision systems)
+overriding the mismatched dynamics. The integral action                    is strictly required to reliably obtain absolute position for
+seamlessly eliminates the unmodelled pitch moments caused                  control [5]. Without these measurements, it is virtually
+
+                                                                       5
+                                                                                                   ACKNOWLEDGEMENTS
+                                                                                 Aaron McFadyen, for his support and guidance throughout
+                                                                              the project X selection.
+
+
+
+                                                                                                         R EFERENCES
+                                                                              [1] T. I. Fossen, Handbook of Marine Craft Hydrodynamics and Motion
+                                                                                  Control, 2nd US ed. Wiley, 2021.
+                                                                              [2] Society of Naval Architects and Marine Engineers (SNAME), Nomen-
+                                                                                  clature for Treating the Motion of a Submerged Body Through a Fluid,
+                                                                                  Technical and Research Bulletin No. 1-5, 1950.
+                                                                              [3] S. Scilletta, “Modelling and control of a Remotely Operated Vehicle
+                                                                                  (ROV),” Master’s thesis, Politecnico di Torino, 2024. [Online]. Avail-
+                                                                                  able: https://webthesis.biblio.polito.it/31918/1/tesi.pdf
+                                                                              [4] K. A. B. A. Rahim, Z. M. Zain, N. Harun, and M. M. Noh, “Hull
+                                                                                  Design for ROV with Four Thrusters (X4-ROV),” The National Con-
+                                                                                  ference for Postgraduate Research 2016, Universiti Malaysia Pahang.
+                                                                              [5] J. C. Kinsey, R. M. Eustice, and L. L. Whitcomb, “A survey of
+Fig. 9. Luenberger Observer drift due to dead reckoning on the noisy              underwater vehicle navigation: Recent advances and new challenges,”
+Blackbox plant.                                                                   IFAC Proceedings Volumes, vol. 39, no. 15, pp. 88-103, 2006.
+
+
+
+impossible to safely regulate and control the ROV over
+extended autonomous periods.
+
+                         VI. C ONCLUSION
+   This report successfully engineered a comprehensive con-
+trol architecture for an underactuated ROV, explicitly balanc-
+ing theoretical design against practical subsea limitations.
+A 3-DOF planar model was derived and validated. A 20
+Hz LQI controller augmented with anti-windup provided
+exceptional, robust waypoint tracking, effortlessly handling
+actuator saturation and severe mismatched blackbox dynam-
+ics. However, implementation of an optimal Luenberger state
+observer revealed a fatal flaw in the sensor suite: relying
+on dead reckoning for position coordinates inevitably leads
+to terminal drift. Future iterations must incorporate physical
+position sensors to guarantee true autonomous operational
+safety.
+
+
+
+
+Fig. 10.   2D Animation Snapshot: The ROV tracking the waypoint safely.
+
+
+
+
+                                                                          6
+

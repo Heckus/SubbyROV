@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<!--
+  Stonefish Scenario Description — ROV
+  =====================================
+  All values in SI units (metres, kg, kg·m², seconds)
+  Converted from SolidWorks mass property exports.
+
+  THRUSTER NAMING (from SolidWorks files):
+    T9  = Top-Left  (TL) — bird's eye view
+    T10 = Bottom-Left (BL)
+    T11 = Bottom-Right (BR)
+    T12 = Top-Right (TR)
+
+  COORDINATE CONVENTION (Stonefish NED or ENU — check your stonefish build):
+    This file assumes ENU: X=forward, Y=left, Z=up
+    If your Stonefish uses NED, swap signs on Y and Z accordingly.
+
+  ⚠️  ITEMS TO FILL IN BEFORE USE:
+    1. Replace mesh filenames with your actual .obj / .stl paths
+    2. Verify thruster axis directions (prop_dir) from your CAD
+    3. Tune thruster Kf/Kf_back and damping from bench tests
+    4. Verify CoB (centre of buoyancy) from SolidWorks displaced volume
+    5. Add vertical thrusters if you have them (not in the exported files)
+-->
+
+<scenario>
+
+  <!-- ============================================================
+       ENVIRONMENT
+  ============================================================ -->
+  <environment>
+    <ned latitude="-27.5" longitude="153.0"/>   <!-- Brisbane area default -->
+    <ocean>
+      <water density="1025.0"/>                  <!-- salt water kg/m³ -->
+      <current type="uniform">
+        <velocity xyz="0.0 0.0 0.0"/>
+      </current>
+    </ocean>
+  </environment>
+
+
+  <!-- ============================================================
+       ROBOT
+  ============================================================ -->
+  <robot name="rov" fixed="false" self_collisions="false">
+
+    <!-- ----------------------------------------------------------
+         BASE BODY
+         Mass: 4088.76 g = 4.08876 kg
+         CoM (mm→m): (-0.00033, 0.00015, -0.00790)
+         Inertia at CoM (g·mm²×1e-9 = kg·m²)
+    ---------------------------------------------------------- -->
+    <base_link name="Vehicle">
+
+      <physics type="submerged">
+
+        <mass value="4.08876"/>
+
+        <!-- Inertia tensor at CoM, aligned with assembly frame -->
+        <inertia>
+          <ixx>0.028948</ixx>
+          <ixy>-0.000147</ixy>
+          <ixz>0.000413</ixz>
+          <iyy>0.027519</iyy>
+          <iyz>-0.000163</iyz>
+          <izz>0.044903</izz>
+        </inertia>
+
+        <!-- Centre of mass offset from link origin -->
+        <center_of_mass xyz="-0.00033 0.00015 -0.00790"/>
+
+        <!--
+          Centre of buoyancy — estimated from foam positions and hull volume.
+          The foam CoMs are at Z≈-58mm; hull is symmetric.
+          CoB is typically slightly above CoM for stable ROV.
+          ⚠️  Refine using SolidWorks displaced-volume centroid.
+        -->
+        <center_of_buoyancy xyz="-0.00033 0.00015 0.010"/>
+
+        <!--
+          Buoyancy volume.
+          Total assembly volume from SW: 3547392.73 mm³ = 3.547e-3 m³
+          At 1025 kg/m³ seawater → buoyancy force = 35.97 N
+          ROV weight = 4.08876 × 9.81 = 40.11 N
+          → ROV is negatively buoyant by ~4 N (needs ballasting or trim)
+          Foam adds 2 × 720000 mm³ = 1.44e-3 m³ → ~14.5 N buoyancy
+          Combined: hull + foam ≈ 4.987e-3 m³ → ~50.1 N (positive)
+          ⚠️  Adjust foam inclusion based on what is already in the hull volume.
+        -->
+        <volume value="4.987e-03"/>
+
+        <!-- Linear drag coefficients (N·s/m) — tune from drag tests or CFD -->
+        <damping>
+          <linear  xyz="20.0 30.0 50.0"/>
+          <angular xyz="5.0  5.0  8.0"/>
+        </damping>
+
+        <!-- Added mass (kg) — approx 10-20% of displaced water mass per axis -->
+        <added_mass>
+          <surge>2.0</surge>
+          <sway>4.0</sway>
+          <heave>5.0</heave>
+          <roll>0.5</roll>
+          <pitch>0.5</pitch>
+          <yaw>1.0</yaw>
+        </added_mass>
+
+      </physics>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <!-- ⚠️  Replace with your exported hull mesh -->
+        <mesh filename="$(find rov_description)/meshes/rov_body.obj"/>
+      </visual>
+
+      <collision>
+        <!-- Simplified box: ~380×320×120mm hull -->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry type="box" dims="0.38 0.32 0.12"/>
+      </collision>
+
+    </base_link>
+
+
+    <!-- ----------------------------------------------------------
+         EVA FOAM 1 — LEFT
+         CoM (m): (-0.00214, -0.06936, -0.05827)
+         Volume: 720000 mm³ = 7.2e-4 m³
+         Mass: 61.20 g = 0.06120 kg
+    ---------------------------------------------------------- -->
+    <link name="foam_left">
+      <physics type="submerged">
+        <mass value="0.06120"/>
+        <inertia>
+          <ixx>3.112e-05</ixx><ixy>-1.420e-06</ixy><ixz>-1.331e-08</ixz>
+          <iyy>3.103e-04</iyy><iyz>-2.618e-06</iyz>
+          <izz>3.083e-04</izz>
+        </inertia>
+        <center_of_mass    xyz="-0.00214 -0.06936 -0.05827"/>
+        <center_of_buoyancy xyz="-0.00214 -0.06936 -0.05827"/>
+        <volume value="7.2e-04"/>
+        <damping>
+          <linear xyz="2.0 2.0 2.0"/>
+          <angular xyz="0.1 0.1 0.1"/>
+        </damping>
+      </physics>
+      <visual>
+        <mesh filename="$(find rov_description)/meshes/foam_left.obj"/>
+        <material>
+          <color rgba="0.95 0.85 0.1 0.8"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="foam_left_joint" type="fixed">
+      <parent link="Vehicle"/>
+      <child  link="foam_left"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- ----------------------------------------------------------
+         EVA FOAM 2 — RIGHT
+         CoM (m): (-0.00143, 0.07142, -0.05827)
+    ---------------------------------------------------------- -->
+    <link name="foam_right">
+      <physics type="submerged">
+        <mass value="0.06120"/>
+        <inertia>
+          <ixx>3.112e-05</ixx><ixy>-1.420e-06</ixy><ixz>1.331e-08</ixz>
+          <iyy>3.103e-04</iyy><iyz>2.618e-06</iyz>
+          <izz>3.083e-04</izz>
+        </inertia>
+        <center_of_mass    xyz="-0.00143 0.07142 -0.05827"/>
+        <center_of_buoyancy xyz="-0.00143 0.07142 -0.05827"/>
+        <volume value="7.2e-04"/>
+        <damping>
+          <linear xyz="2.0 2.0 2.0"/>
+          <angular xyz="0.1 0.1 0.1"/>
+        </damping>
+      </physics>
+      <visual>
+        <mesh filename="$(find rov_description)/meshes/foam_right.obj"/>
+        <material>
+          <color rgba="0.95 0.85 0.1 0.8"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="foam_right_joint" type="fixed">
+      <parent link="Vehicle"/>
+      <child  link="foam_right"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- ----------------------------------------------------------
+         THRUSTERS
+         U2-Thruster (Blue Robotics T200 variant)
+         Mass: 210 g = 0.21 kg each
+
+         ⚠️  THRUST AXIS: Determined from SolidWorks principal axes.
+           T9 (TL) & T12 (TR): Iz=(1,0,0) is smallest inertia axis
+             → propeller axis = X (forward/reverse)
+           T10 (BL) & T11 (BR): Ix=(1,0,0) is smallest inertia axis
+             → propeller axis = X (forward/reverse)
+           All four appear to be horizontal thrusters (surge/sway).
+           Verify if T9/T12 are angled (vectored) from your CAD.
+
+         prop_dir: 1=clockwise, -1=counterclockwise (looking from back)
+         Kf: force constant (N per normalised command 0-1), tune from T200 datasheet
+         Kf_back: reverse force constant (can differ for T200)
+    ---------------------------------------------------------- -->
+
+    <!-- Thruster 9 — Top Left (TL) -->
+    <thruster name="thruster_9_tl" type="simple">
+      <origin xyz="0.01293 -0.14482 0.00116" rpy="0 0 0"/>
+      <!-- Thrust axis: pointing in +X (forward). Adjust rpy if angled. -->
+      <axis xyz="1 0 0"/>
+      <prop_dir value="-1"/>
+      <!-- T200 max thrust ~5.1 kgf = ~50 N at 16V -->
+      <max_force value="50.0"/>
+      <Kf value="40.0"/>
+      <Kf_back value="30.0"/>
+      <input_device topic="/rov/thruster_9_tl/cmd"/>
+    </thruster>
+
+    <!-- Thruster 10 — Bottom Left (BL) -->
+    <thruster name="thruster_10_bl" type="simple">
+      <origin xyz="-0.08901 -0.13982 -0.00139" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <prop_dir value="1"/>
+      <max_force value="50.0"/>
+      <Kf value="40.0"/>
+      <Kf_back value="30.0"/>
+      <input_device topic="/rov/thruster_10_bl/cmd"/>
+    </thruster>
+
+    <!-- Thruster 11 — Bottom Right (BR) -->
+    <thruster name="thruster_11_br" type="simple">
+      <origin xyz="-0.08845 0.14147 -0.00019" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <prop_dir value="-1"/>
+      <max_force value="50.0"/>
+      <Kf value="40.0"/>
+      <Kf_back value="30.0"/>
+      <input_device topic="/rov/thruster_11_br/cmd"/>
+    </thruster>
+
+    <!-- Thruster 12 — Top Right (TR) -->
+    <thruster name="thruster_12_tr" type="simple">
+      <origin xyz="0.01349 0.14647 0.00136" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <prop_dir value="1"/>
+      <max_force value="50.0"/>
+      <Kf value="40.0"/>
+      <Kf_back value="30.0"/>
+      <input_device topic="/rov/thruster_12_tr/cmd"/>
+    </thruster>
+
+
+    <!-- ----------------------------------------------------------
+         SENSORS
+    ---------------------------------------------------------- -->
+    <imu name="imu" rate="100">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <ros_publisher topic="/rov/imu"/>
+    </imu>
+
+    <pressure name="depth_sensor" rate="10">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <ros_publisher topic="/rov/depth"/>
+    </pressure>
+
+    <!-- ----------------------------------------------------------
+         CAMERA ASSEMBLY
+         Mass: 69.00 g = 0.06900 kg
+         CoM (mm→m): X=145.40, Y=-0.30, Z=-8.96
+           → camera is mounted ~145mm FORWARD of assembly origin
+         Inertia at CoM (g·mm² × 1e-9 = kg·m²):
+           Ixx=1.652e-5, Iyy=3.699e-5, Izz=3.885e-5
+
+         ⚠️  Resolution, FoV, and rate below are placeholders —
+             update to match your actual camera (e.g. BlueRobotics
+             Low-Light USB Camera: 1080p, ~90° HFOV).
+    ---------------------------------------------------------- -->
+    <camera name="front_camera" rate="30">
+      <!-- Position at camera CoM; looking forward (+X), no tilt -->
+      <origin xyz="0.14540 -0.00030 -0.00896" rpy="0 0 0"/>
+      <specs horizontal_fov="1.5708"
+             image_width="1920"
+             image_height="1080"
+             near_clip="0.02"
+             far_clip="50.0"/>
+      <ros_publisher topic="/rov/camera/image_raw"
+                     info_topic="/rov/camera/camera_info"/>
+    </camera>
+
+
+    <!-- ----------------------------------------------------------
+         INITIAL POSE
+    ---------------------------------------------------------- -->
+    <world_transform xyz="0 0 -2.0" rpy="0 0 0"/>
+
+  </robot>
+
+</scenario>

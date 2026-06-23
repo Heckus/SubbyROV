@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<scenario>
+
+    <environment>
+        <ned latitude="-27.47" longitude="153.03"/>
+
+        <ocean>
+            <water density="1031.0" temperature="20.0"/>
+            <waves height="0.0"/>
+            <particles enabled="false"/>
+            <current type="uniform">
+                <velocity xyz="0 0 0"/>
+            </current>
+        </ocean>
+    </environment>
+
+    <materials>
+        <material name="ROVMat" density="1000.0" restitution="0.3"/>
+        <material name="PoolMat" density="2000.0" restitution="0.2"/>
+
+        <friction_table>
+            <friction material1="ROVMat" material2="ROVMat" static="0.6" dynamic="0.4"/>
+            <friction material1="ROVMat" material2="PoolMat" static="0.7" dynamic="0.5"/>
+            <friction material1="PoolMat" material2="PoolMat" static="0.8" dynamic="0.6"/>
+        </friction_table>
+    </materials>
+
+    <looks>
+        <look name="ROVLook" rgb="0.30 0.30 0.35" roughness="0.5"/>
+        <look name="PoolLook" rgb="0.95 0.95 0.95" roughness="0.8"/>
+    </looks>
+
+    <static name="pool_floor" type="box">
+        <dimensions xyz="4.0 4.0 0.2"/>
+        <material name="PoolMat"/>
+        <look name="PoolLook"/>
+        <world_transform xyz="0 0 1.0" rpy="0 0 0"/>
+    </static>
+
+    <static name="wall_front" type="box">
+        <dimensions xyz="4.0 0.2 2.0"/>
+        <material name="PoolMat"/>
+        <look name="PoolLook"/>
+        <world_transform xyz="0 1.9 0.0" rpy="0 0 0"/>
+    </static>
+
+    <static name="wall_back" type="box">
+        <dimensions xyz="4.0 0.2 2.0"/>
+        <material name="PoolMat"/>
+        <look name="PoolLook"/>
+        <world_transform xyz="0 -1.9 0.0" rpy="0 0 0"/>
+    </static>
+
+    <static name="wall_left" type="box">
+        <dimensions xyz="0.2 4.0 2.0"/>
+        <material name="PoolMat"/>
+        <look name="PoolLook"/>
+        <world_transform xyz="-1.9 0 0.0" rpy="0 0 0"/>
+    </static>
+
+    <static name="wall_right" type="box">
+        <dimensions xyz="0.2 4.0 2.0"/>
+        <material name="PoolMat"/>
+        <look name="PoolLook"/>
+        <world_transform xyz="1.9 0 0.0" rpy="0 0 0"/>
+    </static>
+
+    <include file="$(find stonefish_qut_rov)/scenarios/qut_rov_only.scn">
+        <arg name="vehicle_name" value="qut_rov"/>
+        <arg name="position" value="0 0 1"/>
+        <arg name="orientation" value="0 0 0"/>
+    </include>
+
+</scenario>

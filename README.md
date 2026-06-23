@@ -1,33 +1,37 @@
-<p align="center">
-  <img src="/Documentation/images/logo.png" alt="QUT Logo" width="300"/>
-</p>
+<div align="center">
+  <img src="Documentation/images/logo.png" alt="QUT Logo" width="400"/>
+
+  [![ROS 2](https://img.shields.io/badge/ROS-2%20Humble-blue.svg)](https://docs.ros.org/en/humble/index.html)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+  [![Project](https://img.shields.io/badge/Status-Active-success.svg)](#)
+</div>
 
 # SubbyROV: A Small-Scale Underwater ROV
 
-| ![Final SolidWorks Render (Design #4)](/CAD/Renders/Full.gif) | ![Final SolidWorks Render (Design WTE #4)](/CAD/Renders/WTE.gif) |
+| <img src="/Showcase/othermedia/Full.gif" height="250" /> | <img src="/Showcase/othermedia/WTE.gif" height="250" /> |
 | :---: | :---: |
-| *Final SolidWorks Render (Design #4)* | *Final SolidWorks Render (Design WTE #4)* |
-| ![Test-fitting the internal electronics tray](/Documentation/images/progress.jpg) | ![Initial prototyping workspace and components](/Documentation/images/workshop.jpg) |
-| *Test-fitting the internal electronics tray* | *Initial prototyping workspace and components* |
+| *Final SolidWorks Render* | *WTE Design Render* |
+| <img src="/Showcase/Development/test2_image.png" height="250" /> | <img src="/Showcase/othermedia/SimDemoClip.gif" height="250" /> |
+| *Electronics Tray Prototyping* | *Stonefish Simulation Demo* |
 
 ## About the SubbyROV Project
 
-This project, part of the EGH400 Research Project at Queensland University of Technology (QUT), documents the development of a small-scale, research-grade Remotely Operated Vehicle (ROV).
+This project, part of the EGH400 and EGH490 Research Projects at Queensland University of Technology (QUT), documents the development of a small-scale, research-grade Remotely Operated Vehicle (ROV).
 
-This repository will serve as the open-source hub for the project, containing all design specifications, CAD models, software, and simulation files.
+This repository serves as the open-source hub for the project, containing all design specifications, CAD models, software, and simulation files.
 
 ### Motivation
 
-While QUT possesses a capable BlueROV2, its large size, complex handling, and setup requirements (e.g., pool approval) make it impractical for rapid prototyping, small-scale tests, or educational demonstrations .
+While QUT possesses a capable BlueROV2, its large size, complex handling, and setup requirements (e.g., pool approval) make it impractical for rapid prototyping, small-scale tests, or educational demonstrations.
 
 This project aims to fill that gap by creating a highly modular, cost-effective, and compact ROV. The primary objective is to build a fully operational vehicle that can serve as:
 
-1.  A versatile testbed for novel Machine Learning (ML) control pipelines.
+1.  A versatile testbed for novel Machine Learning (ML) control pipelines and advanced LQI controllers.
 2.  An accessible and portable platform for QUT open days and demonstrations.
 
-### At a Glance
+### At a Glance & Bill of Materials (BOM)
 
-The SubbyROV is designed from the ground up to be small, agile, and computationally capable, using a mix of Commercial-Off-The-Shelf (COTS) and custom 3D-printed parts.
+The SubbyROV is designed from the ground up to be small, agile, and computationally capable, using a mix of Commercial-Off-The-Shelf (COTS) and custom 3D-printed parts. 
 
 | Specification | Details |
 | :--- | :--- |
@@ -41,53 +45,77 @@ The SubbyROV is designed from the ground up to be small, agile, and computationa
 | **Communication** | Fathom-X Tether Interface Boards for Ethernet-over-tether. |
 | **Power** | Tattu 5200mAh 4S (14.8V) LiPo Battery. |
 | **Est. Runtime** | ~32 minutes (at typical cruising draw). |
-| **Est. Cost** | ~$2,900 - $3,000 AUD. |
+| **Total Weight** | ~3.2 kg (3,209.29 g) |
+| **Total Cost** | $2,884.38 AUD |
+
+*Note: For the full itemized Bill of Materials, refer to Appendix B of the Final Project Report in the `/Documentation` folder.*
+
+## System Design Architecture
+
+<p align="center">
+  <img src="/Documentation/AdditionalDocumentation/SystemDiagram.png" alt="System Diagram" width="800"/>
+</p>
+
+The SubbyROV operates on a robust, decentralized communication and control architecture designed for maximum reliability and modularity. At its core, the **Pixhawk 6X** flight controller runs the ArduSub firmware, which handles low-level stabilization and thruster mixing for the 4-thruster vectored configuration.
+
+Surface communication is achieved through **Fathom-X** Tether Interface Boards, which provide a high-speed Ethernet connection over a single twisted pair tether. This Ethernet link allows a top-side control station running QGroundControl or a custom ROS2 ground station to send MAVLink commands and receive live HD video streams from the internal IP camera, bypassing the need for heavy, multi-wire tethers.
 
 ## Project Status
 
-**Current Status:** Phase 1 (Research and Design) is complete. The project is now actively in **Phase 2: Assembly and System Integration**.
+**Current Status:** The primary hardware development and initial manual testing phases have successfully concluded. The SubbyROV has demonstrated watertight integrity, stable camera streaming, and reliable basic teleoperation during pool testing.
 
-### Key Milestones Achieved
+**Future Work:** The project is currently being continued by Brad Edwards. Building upon the solid mechanical and electrical foundation, the next major phase focuses heavily on software and control. Utilizing the digital twin developed in Stonefish, Brad is actively working on:
+- Implementing advanced underactuated 4-thruster control laws (such as LQI controllers).
+- Developing autonomous navigation and pathing capabilities.
+- Integrating computer vision algorithms to transition the ROV from a manually operated prototype to a fully capable autonomous testbed.
 
-* **Literature Review:** A comprehensive review of existing ROV designs was completed to inform key design philosophies.
-* **Design Iterations:** The project progressed through four major design iterations in SolidWorks, pivoting from an initial 6-thruster concept to the final, compact 4-thruster design to meet strict size and power constraints .
-* **Final CAD Model:** A complete, detailed CAD assembly of the final design has been produced.
-* **Procurement:** A full Bill of Materials (BOM) has been finalized. All critical long-lead components (Pixhawk 6X, thrusters, enclosure) have been procured and received.
-* **Initial Prototyping:** The internal electronics tray has been 3D-printed and assembled with the core components to test-fit and validate the SolidWorks design.
-* **Safety:** A comprehensive Risk Assessment (ID: 18339) has been submitted to the QUT HSE Hub, covering electrical, operational, and battery-handling hazards.
+## Stonefish Simulation Environment
 
-### Next Steps
+To accelerate the development of complex underactuated control systems and autonomous behaviors without risking the physical hardware, a custom ROS2 package `stonefish_qut_rov` has been developed. 
 
-The project is now transitioning from the theoretical design phase to-physical construction and validation.
+Leveraging the **Stonefish** marine simulator, this digital twin accurately models the ROV's hydrodynamics and vectored thruster configuration. 
 
-1.  **Phase 2: Assembly & System Integration**
-    * Complete the full physical assembly of the aluminum frame, thrusters, and watertight enclosure.
-    * Wire all internal electronics (Pixhawk, PDB, Fathom-X) and seal all cable penetrators.
-    * Flash the Pixhawk controller with ArduSub firmware and establish a communication link with the ground station.
-    * Simulate the ROV in ROS2/Gazebo using a URDF model to validate control algorithms and buoyancy.
-    * Design and add custom buoyancy modules based on the final assembled mass.
-
-2.  **Phase 3: Testing & Validation**
-    * Conduct initial waterproofing and leak tests in a controlled tank.
-    * Ballast the ROV to achieve neutral buoyancy and a stable trim.
-    * Perform system identification and tune PID control loops for stable depth-holding and heading-holding.
-    * Validate the ROV's performance against the original project objectives.
+**Key Simulation Capabilities Include:**
+- `teleop.py`: Manual teleoperation and thrust testing.
+- `station_keeping_node.py`: Advanced depth and heading holding algorithms.
+- `pid_controller.py`: Tuning PID control loops for stable navigation.
+- `ball_centering.py`: Computer vision testing for autonomous object tracking using the simulated camera feed.
 
 ## Repository Contents
 
-This repository will be populated as the project progresses and will contain:
-
-* **/CAD:** All SolidWorks 2023 part files, assembly files, and technical drawings for the final design.
-* **/URDF:** Robot Operating System (ROS2) models and Gazebo simulation files.
-* **/Software:** Configuration files for the ArduSub firmware and any custom control software.
-* **/Documentation:** The final project report, Bill of Materials (BOM), and assembly guides.
+* **/CAD:** All SolidWorks 2025 part files, assembly files, and technical drawings for the final design. These have been converted to STEP files for accessability.
+* **/StonefishSimulation:** Custom ROS2 package containing the Stonefish digital twin, launch files, and autonomous Python nodes.
+* **/Documentation:** The final project reports, complete Bill of Materials (BOM), additional information, and presentations.
+* **/Showcase:** Images, GIFs, and media videos showcasing the prototype build, testing and SolidWorks renders.
 
 ## The Team
 
-<img src="/Documentation/images/profileB.jpg" alt="Photo of Joshua Hecke" width="100"/>
-Student Engineer: Joshua Hecke (Queensland University of Technology) 
+This capstone project is proudly developed by student engineers at QUT, under the supervision of Tobias Fischer.
 
-<img src="/Documentation/images/profileA.jpg" alt="Photo of Tobias Fischer" width="100"/>
-Project Supervisor: Tobias Fischer (Queensland University of Technology) 
+<table>
+  <tr>
+    <td align="center">
+      <img src="/Documentation/images/profileB.jpg" alt="Joshua Hecke" width="150" style="border-radius: 50%;"/>
+      <br />
+      <b>Joshua Hecke</b>
+      <br />
+      <i>Lead Mechatronics Engineer</i>
+    </td>
+    <td align="center">
+      <img src="/Showcase/othermedia/profileC.jpg" alt="Brad Edwards" width="150" style="border-radius: 50%;"/>
+      <br />
+      <b>Brad Edwards</b>
+      <br />
+      <i>Simulation & Control Engineer</i>
+    </td>
+    <td align="center">
+      <img src="/Showcase/othermedia/profileA.jpg" alt="Tobias Fischer" width="150" style="border-radius: 50%;"/>
+      <br />
+      <b>Tobias Fischer</b>
+      <br />
+      <i>Project Lead & Supervisor</i>
+    </td>
+  </tr>
+</table>
 
-Project Supervisor GitHub: [tobias-fischer](https://github.com/tobias-fischer)
+**Supervisor GitHub:** [tobias-fischer](https://github.com/tobias-fischer)
