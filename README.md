@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Documentation/images/logo.png" alt="QUT Logo" width="400"/>
+  <img src="Showcase/othermedia/logo.png" alt="QUT Logo" width="400"/>
 
   [![ROS 2](https://img.shields.io/badge/ROS-2%20Humble-blue.svg)](https://docs.ros.org/en/humble/index.html)
   [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -8,10 +8,10 @@
 
 # SubbyROV: A Small-Scale Underwater ROV
 
-| <img src="/Showcase/othermedia/Full.gif" height="250" /> | <img src="/Showcase/othermedia/WTE.gif" height="250" /> |
+| <img src="Showcase/othermedia/Full.gif" height="250" /> | <img src="Showcase/othermedia/WTE.gif" height="250" /> |
 | :---: | :---: |
 | *Final SolidWorks Render* | *WTE Design Render* |
-| <img src="/Showcase/Development/test2_image.png" height="250" /> | <img src="/Showcase/othermedia/SimDemoClip.gif" height="250" /> |
+| <img src="Showcase/Development/test2_image.png" height="250" /> | <img src="Showcase/othermedia/SimDemoClip.gif" height="250" /> |
 | *Electronics Tray Prototyping* | *Stonefish Simulation Demo* |
 
 ## About the SubbyROV Project
@@ -53,7 +53,7 @@ The SubbyROV is designed from the ground up to be small, agile, and computationa
 ## System Design Architecture
 
 <p align="center">
-  <img src="/Documentation/AdditionalDocumentation/SystemDiagram.png" alt="System Diagram" width="800"/>
+  <img src="Documentation/AdditionalDocumentation/SystemDiagram.png" alt="System Diagram" width="800"/>
 </p>
 
 The SubbyROV operates on a robust, decentralized communication and control architecture designed for maximum reliability and modularity. At its core, the **Pixhawk 6X** flight controller runs the ArduSub firmware, which handles low-level stabilization and thruster mixing for the 4-thruster vectored configuration.
@@ -95,21 +95,21 @@ This capstone project is proudly developed by student engineers at QUT, under th
 <table>
   <tr>
     <td align="center">
-      <img src="/Documentation/images/profileB.jpg" alt="Joshua Hecke" width="150" style="border-radius: 50%;"/>
+      <img src="Documentation/images/profileB.jpg" alt="Joshua Hecke" width="150" style="border-radius: 50%;"/>
       <br />
       <b>Joshua Hecke</b>
       <br />
       <i>Lead Mechatronics Engineer</i>
     </td>
     <td align="center">
-      <img src="/Showcase/othermedia/profileC.jpg" alt="Brad Edwards" width="150" style="border-radius: 50%;"/>
+      <img src="Showcase/othermedia/profileC.jpg" alt="Brad Edwards" width="150" style="border-radius: 50%;"/>
       <br />
       <b>Brad Edwards</b>
       <br />
       <i>Simulation & Control Engineer</i>
     </td>
     <td align="center">
-      <img src="/Showcase/othermedia/profileA.jpg" alt="Tobias Fischer" width="150" style="border-radius: 50%;"/>
+      <img src="Showcase/othermedia/profileA.jpg" alt="Tobias Fischer" width="150" style="border-radius: 50%;"/>
       <br />
       <b>Tobias Fischer</b>
       <br />
