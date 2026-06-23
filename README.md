@@ -95,7 +95,7 @@ This capstone project is proudly developed by student engineers at QUT, under th
 <table>
   <tr>
     <td align="center">
-      <img src="Documentation/images/profileB.jpg" alt="Joshua Hecke" width="150" style="border-radius: 50%;"/>
+      <img src="Showcase/othermedia/profileB.jpg" alt="Joshua Hecke" width="150" height="150" style="border-radius: 50%;"/>
       <br />
       <b>Joshua Hecke</b>
       <br />
